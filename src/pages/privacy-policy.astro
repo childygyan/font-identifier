@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Privacy Policy — Font Identifier"
+  description="Privacy policy for Font Identifier: what data we collect (almost none), how images you upload are handled, and third-party services."
+  path="/privacy-policy/"
+>
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <nav class="text-sm text-slate-500">
+      <a href="/" class="hover:text-indigo-600">Home</a> <span class="mx-1">/</span> Privacy Policy
+    </nav>
+    <h1 class="mt-4 text-4xl font-extrabold tracking-tight text-slate-900">Privacy Policy</h1>
+    <p class="mt-2 text-sm text-slate-500">Last updated: October 2026</p>
+
+    <div class="mt-8 space-y-6 text-slate-700 leading-relaxed">
+      <p>
+        Font Identifier is designed to collect as little data as possible. This policy explains
+        what happens when you use the site.
+      </p>
+      <h2 class="text-xl font-bold text-slate-900">Images you upload</h2>
+      <p>
+        The "Identify Font from Image" tool processes your image entirely in your own browser
+        using JavaScript. Your image is never uploaded to our servers, never stored, and never
+        shared with anyone. Closing the tab discards it completely.
+      </p>
+      <h2 class="text-xl font-bold text-slate-900">Accounts and personal data</h2>
+      <p>
+        There are no accounts, no sign-ups, and no contact forms that store your details. We do
+        not ask for your name, email address, or any personal information to use the tools.
+      </p>
+      <h2 class="text-xl font-bold text-slate-900">Cookies and analytics</h2>
+      <p>
+        We do not set any cookies ourselves, and we currently run no analytics on this site.
+        If that changes, this policy will be updated.
+      </p>
+      <h2 class="text-xl font-bold text-slate-900">Third-party services</h2>
+      <p>
+        Font previews are loaded from Google Fonts (fonts.googleapis.com / fonts.gstatic.com).
+        When your browser fetches a font, Google receives standard request data such as your IP
+        address, as described in Google's Privacy Policy. We have no control over that request
+        beyond choosing to use the service.
+      </p>
+      <h2 class="text-xl font-bold text-slate-900">Contact</h2>
+      <p>
+        Questions about this policy? Reach us via the <a href="/contact/" class="text-indigo-600 hover:underline">contact page</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

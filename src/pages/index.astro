@@ -1,0 +1,331 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { FONTS, googleFontsUrlMany, CATEGORY_LABELS } from "../data/fonts";
+import type { FontCategory } from "../data/fonts";
+
+const title = "Free Font Identifier — Identify Any Font in Seconds";
+const description =
+  "Free font identifier: identify any font from an image, answer a few questions, or browse 148 popular Google Fonts. No sign-up — find your font in seconds.";
+
+const topFonts = [...FONTS].sort((a, b) => b.popularity - a.popularity).slice(0, 8);
+const topFontsCssUrl = googleFontsUrlMany(topFonts);
+
+function genericFallback(category: FontCategory): string {
+  switch (category) {
+    case "serif":
+      return "serif";
+    case "sans-serif":
+      return "sans-serif";
+    case "monospace":
+      return "monospace";
+    case "handwritten":
+      return "cursive";
+    default:
+      return "sans-serif";
+  }
+}
+---
+
+<BaseLayout title={title} description={description} path="/">
+  <!-- Extra webfonts for the popular-fonts strip (stylesheet link is body-ok) -->
+  <link rel="stylesheet" href={topFontsCssUrl} />
+
+  <!-- Hero -->
+  <section class="border-b border-slate-100 bg-gradient-to-b from-indigo-50/70 to-white">
+    <div class="mx-auto max-w-6xl px-4 py-16 text-center sm:py-20">
+      <span
+        class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700"
+      >
+        Free &middot; No sign-up required
+      </span>
+      <h1 class="mt-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+        Free Font Identifier
+      </h1>
+      <p class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+        Looking for a <strong class="font-semibold text-slate-800">font identifier</strong> that
+        actually helps? This <strong class="font-semibold text-slate-800">free font identifier</strong>
+        gives you three ways to track down the typeface behind any text: identify a font from an
+        image, answer a few guided questions, or browse a curated library of 148 popular fonts.
+        No sign-up, no cost — just answers.
+      </p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          href="/font-identifier-from-image/"
+          class="rounded-lg bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+        >
+          Identify Font from Image
+        </a>
+        <a
+          href="/browse/"
+          class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-800 transition hover:border-indigo-300 hover:text-indigo-700"
+        >
+          Browse Fonts
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool cards -->
+  <section class="mx-auto max-w-6xl px-4 py-14">
+    <h2 class="text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+      Three ways to identify a font
+    </h2>
+    <p class="mx-auto mt-2 max-w-xl text-center text-slate-600">
+      Pick the method that fits what you have — a picture, a description, or just curiosity.
+    </p>
+    <div class="mt-8 grid gap-5 md:grid-cols-3">
+      <a
+        href="/font-identifier-from-image/"
+        class="group rounded-xl border border-slate-200 bg-white p-6 transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg"
+      >
+        <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="9" cy="9" r="2" />
+            <path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21" />
+          </svg>
+        </span>
+        <h3 class="mt-4 text-lg font-bold text-slate-900">Identify Font from Image</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Upload a screenshot or photo of text, type the same words, and compare them side by
+          side against popular fonts until you spot your match.
+        </p>
+        <span class="mt-4 inline-block text-sm font-semibold text-indigo-600 group-hover:underline">
+          Try it &rarr;
+        </span>
+      </a>
+      <a
+        href="/identify/"
+        class="group rounded-xl border border-slate-200 bg-white p-6 transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg"
+      >
+        <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" />
+            <path d="M12 17h.01" />
+          </svg>
+        </span>
+        <h3 class="mt-4 text-lg font-bold text-slate-900">Q&amp;A Font Finder</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          No image? No problem. Answer five quick questions about serifs, weight and style, and
+          get a ranked list of the most likely matches.
+        </p>
+        <span class="mt-4 inline-block text-sm font-semibold text-indigo-600 group-hover:underline">
+          Try it &rarr;
+        </span>
+      </a>
+      <a
+        href="/browse/"
+        class="group rounded-xl border border-slate-200 bg-white p-6 transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg"
+      >
+        <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+        </span>
+        <h3 class="mt-4 text-lg font-bold text-slate-900">Browse Fonts</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Explore all 148 fonts in the library. Filter by category, preview your own text in
+          each one, and find the perfect typeface for your project.
+        </p>
+        <span class="mt-4 inline-block text-sm font-semibold text-indigo-600 group-hover:underline">
+          Try it &rarr;
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="border-y border-slate-100 bg-slate-50/70">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <h2 class="text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+        How it works
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-center text-slate-600">
+        No machine-learning black box — just a straightforward process you can see and trust.
+      </p>
+      <div class="mt-8 grid gap-5 md:grid-cols-3">
+        <div class="rounded-xl border border-slate-200 bg-white p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-base font-bold text-white">1</span>
+          <h3 class="mt-4 text-lg font-bold text-slate-900">Show us the text</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600">
+            Upload an image of the text you want to identify, or describe the font by answering
+            a few simple questions about its look.
+          </p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-base font-bold text-white">2</span>
+          <h3 class="mt-4 text-lg font-bold text-slate-900">Compare against the library</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600">
+            We render your words in candidate fonts from our curated collection, so you can
+            compare them side by side with your original sample.
+          </p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-base font-bold text-white">3</span>
+          <h3 class="mt-4 text-lg font-bold text-slate-900">Find your match</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600">
+            Pick the closest match, see the font&rsquo;s exact name and details, and download it
+            free from Google Fonts.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular fonts strip -->
+  <section class="mx-auto max-w-6xl px-4 py-14">
+    <h2 class="text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+      Popular fonts
+    </h2>
+    <p class="mx-auto mt-2 max-w-xl text-center text-slate-600">
+      The most-used fonts in our library — rendered live, each in its own typeface.
+    </p>
+    <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+      {
+        topFonts.map((font) => (
+          <a
+            href="/browse/"
+            class="rounded-xl border border-slate-200 bg-white p-6 text-center transition hover:border-indigo-200 hover:shadow-md"
+          >
+            <span
+              class="block text-5xl leading-none text-slate-900"
+              style={{ fontFamily: `'${font.name}', ${genericFallback(font.category)}` }}
+              aria-hidden="true"
+            >
+              Aa
+            </span>
+            <span
+              class="mt-3 block text-xl text-slate-900"
+              style={{ fontFamily: `'${font.name}', ${genericFallback(font.category)}` }}
+            >
+              {font.name}
+            </span>
+            <span class="mt-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+              {CATEGORY_LABELS[font.category]}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Why identifying fonts matters -->
+  <section class="border-y border-slate-100 bg-slate-50/70">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <h2 class="text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+        Why identifying fonts matters
+      </h2>
+      <ul class="mx-auto mt-8 max-w-3xl space-y-5">
+        <li class="flex gap-4 rounded-xl border border-slate-200 bg-white p-5">
+          <span class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-sm font-bold text-indigo-700">D</span>
+          <p class="text-sm leading-relaxed text-slate-600">
+            <strong class="font-semibold text-slate-900">Designers</strong> — match a
+            client&rsquo;s existing brand typography, recreate a reference design with the exact
+            typeface, or find a free alternative with the same feel.
+          </p>
+        </li>
+        <li class="flex gap-4 rounded-xl border border-slate-200 bg-white p-5">
+          <span class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-sm font-bold text-indigo-700">&lt;/&gt;</span>
+          <p class="text-sm leading-relaxed text-slate-600">
+            <strong class="font-semibold text-slate-900">Developers</strong> — identify the font
+            in a mockup or screenshot so you can load the correct webfont instead of guessing
+            from a lookalike.
+          </p>
+        </li>
+        <li class="flex gap-4 rounded-xl border border-slate-200 bg-white p-5">
+          <span class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-sm font-bold text-indigo-700">R</span>
+          <p class="text-sm leading-relaxed text-slate-600">
+            <strong class="font-semibold text-slate-900">Brand &amp; content research</strong> —
+            figure out which fonts competitors use, audit your own brand consistency, or build a
+            shortlist of typefaces for a new project.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="mx-auto max-w-3xl px-4 py-14">
+    <h2 class="text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+      Frequently asked questions
+    </h2>
+    <div class="mt-8 space-y-3">
+      <details class="group rounded-xl border border-slate-200 bg-white px-5 py-4">
+        <summary class="cursor-pointer list-none text-base font-semibold text-slate-900">
+          Is it really free?
+          <span class="float-right text-indigo-600 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Yes. Every tool on this site is free to use with no limits, and every font in the
+          library is a free Google Font that you can download and use in your own projects.
+        </p>
+      </details>
+      <details class="group rounded-xl border border-slate-200 bg-white px-5 py-4">
+        <summary class="cursor-pointer list-none text-base font-semibold text-slate-900">
+          Do I need to sign up?
+          <span class="float-right text-indigo-600 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          No. There are no accounts, no email addresses and no sign-up forms — just open a tool
+          and start identifying fonts.
+        </p>
+      </details>
+      <details class="group rounded-xl border border-slate-200 bg-white px-5 py-4">
+        <summary class="cursor-pointer list-none text-base font-semibold text-slate-900">
+          Can it identify any font?
+          <span class="float-right text-indigo-600 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Honestly: it matches against a curated library of 148 popular free fonts using visual
+          side-by-side comparison and guided questions. It is <strong class="font-semibold">not</strong>
+          AI image recognition, so if your font is not in the library it cannot name it — but
+          you will usually find a close visual match or a free alternative with a similar look.
+        </p>
+      </details>
+      <details class="group rounded-xl border border-slate-200 bg-white px-5 py-4">
+        <summary class="cursor-pointer list-none text-base font-semibold text-slate-900">
+          What fonts are included?
+          <span class="float-right text-indigo-600 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          148 popular Google Fonts across five categories — serif, sans-serif, display,
+          handwritten and monospace — from workhorses like Inter and Roboto to statement faces
+          like Bebas Neue and Playfair Display.
+        </p>
+      </details>
+      <details class="group rounded-xl border border-slate-200 bg-white px-5 py-4">
+        <summary class="cursor-pointer list-none text-base font-semibold text-slate-900">
+          How do I identify a font from a photo?
+          <span class="float-right text-indigo-600 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Open the Identify from Image tool, upload your photo, type the visible words into the
+          comparison box, then scroll through matching fonts rendered in your exact text until
+          you spot the one that matches.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- CTA band -->
+  <section class="mx-auto max-w-6xl px-4 pb-4">
+    <div class="rounded-2xl bg-indigo-600 px-6 py-12 text-center sm:px-12">
+      <h2 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+        Found some text you can&rsquo;t name?
+      </h2>
+      <p class="mx-auto mt-3 max-w-xl text-indigo-100">
+        Upload it and compare it against 148 popular fonts — free, no sign-up, no guesswork.
+      </p>
+      <a
+        href="/font-identifier-from-image/"
+        class="mt-6 inline-block rounded-lg bg-white px-6 py-3 text-base font-semibold text-indigo-700 shadow-sm transition hover:bg-indigo-50"
+      >
+        Identify Font from Image
+      </a>
+    </div>
+  </section>
+</BaseLayout>

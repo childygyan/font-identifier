@@ -1,0 +1,22 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Page Not Found — Font Identifier"
+  description="The page you're looking for doesn't exist. Try our font identifier tools instead."
+  path="/404/"
+>
+  <div class="mx-auto max-w-2xl px-4 py-20 text-center">
+    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-100 font-serif text-3xl text-indigo-600">?</div>
+    <h1 class="mt-6 text-4xl font-extrabold tracking-tight text-slate-900">Page not found</h1>
+    <p class="mt-3 text-slate-600">
+      The page you're looking for doesn't exist or was moved. Let's get you back to identifying fonts.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href="/" class="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">Home</a>
+      <a href="/font-identifier-from-image/" class="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Identify from Image</a>
+      <a href="/browse/" class="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Browse Fonts</a>
+    </div>
+  </div>
+</BaseLayout>

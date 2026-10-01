@@ -1,0 +1,113 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+
+const { title, description, path = "/" } = Astro.props;
+const site = "https://font-identifier.pages.dev";
+const canonical = `${site}${path}`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%234f46e5'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' fill='white' text-anchor='middle'%3EAa%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-white text-slate-800 antialiased">
+    <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+        <a href="/" class="flex items-center gap-2">
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 font-serif text-xl text-white">Aa</span>
+          <span class="text-lg font-extrabold tracking-tight text-slate-900">
+            Font<span class="text-indigo-600">Identifier</span>
+          </span>
+        </a>
+        <nav class="hidden items-center gap-1 text-sm font-medium md:flex">
+          <a href="/" class="rounded-md px-3 py-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900">Home</a>
+          <a href="/font-identifier-from-image/" class="rounded-md px-3 py-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900">Identify from Image</a>
+          <a href="/identify/" class="rounded-md px-3 py-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900">Q&amp;A Finder</a>
+          <a href="/browse/" class="rounded-md px-3 py-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900">Browse Fonts</a>
+          <a href="/guides/" class="rounded-md px-3 py-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900">Guides</a>
+        </nav>
+        <a
+          href="/font-identifier-from-image/"
+          class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+        >
+          Identify a Font
+        </a>
+      </div>
+      <nav class="flex items-center gap-1 overflow-x-auto border-t border-slate-100 px-4 py-2 text-sm font-medium md:hidden">
+        <a href="/" class="whitespace-nowrap rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100">Home</a>
+        <a href="/font-identifier-from-image/" class="whitespace-nowrap rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100">From Image</a>
+        <a href="/identify/" class="whitespace-nowrap rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100">Q&amp;A Finder</a>
+        <a href="/browse/" class="whitespace-nowrap rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100">Browse</a>
+        <a href="/guides/" class="whitespace-nowrap rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100">Guides</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="mt-16 border-t border-slate-200 bg-slate-50">
+      <div class="mx-auto max-w-6xl px-4 py-10">
+        <div class="grid gap-8 md:grid-cols-4">
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-2">
+              <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 font-serif text-lg text-white">Aa</span>
+              <span class="font-extrabold text-slate-900">Font<span class="text-indigo-600">Identifier</span></span>
+            </div>
+            <p class="mt-3 max-w-sm text-sm text-slate-600">
+              A free font identifier and font finder. Identify fonts from images,
+              answer a few questions, or browse popular Google Fonts — no sign-up needed.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Tools</h3>
+            <ul class="mt-3 space-y-2 text-sm">
+              <li><a href="/font-identifier-from-image/" class="text-slate-600 hover:text-indigo-600">Identify Font from Image</a></li>
+              <li><a href="/identify/" class="text-slate-600 hover:text-indigo-600">Q&amp;A Font Finder</a></li>
+              <li><a href="/browse/" class="text-slate-600 hover:text-indigo-600">Browse Fonts</a></li>
+              <li><a href="/guides/" class="text-slate-600 hover:text-indigo-600">Font Guides</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Site</h3>
+            <ul class="mt-3 space-y-2 text-sm">
+              <li><a href="/about/" class="text-slate-600 hover:text-indigo-600">About</a></li>
+              <li><a href="/contact/" class="text-slate-600 hover:text-indigo-600">Contact</a></li>
+              <li><a href="/privacy-policy/" class="text-slate-600 hover:text-indigo-600">Privacy Policy</a></li>
+              <li><a href="/terms-of-service/" class="text-slate-600 hover:text-indigo-600">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-8 border-t border-slate-200 pt-6 text-xs text-slate-500">
+          <p>© 2026 Font Identifier · An FK Digital Media project. Font previews render via Google Fonts; this site is not affiliated with Google.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

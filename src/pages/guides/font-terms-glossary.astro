@@ -1,0 +1,147 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const terms = [
+  {
+    term: "Serif",
+    definition:
+      "A small decorative stroke or 'foot' at the end of a letter's main strokes — think of the little feet on the letters in Times New Roman. Fonts that have them are called serif fonts, and they are traditionally associated with print, books, and formal documents.",
+  },
+  {
+    term: "Sans-serif",
+    definition:
+      "Literally 'without serif': a font whose letters end in clean, plain strokes with no decorative feet. Arial, Helvetica, and Inter are classic examples. Sans-serif fonts dominate screens and modern branding.",
+  },
+  {
+    term: "Slab serif",
+    definition:
+      "A serif font whose serifs are thick, blocky, and rectangular — like slabs. It gives text a sturdy, bold, almost poster-like feel, and is popular for headlines and logos that need to look confident.",
+  },
+  {
+    term: "X-height",
+    definition:
+      "The height of a lowercase 'x' in a font, which effectively sets how tall all lowercase letters appear. A large x-height makes text look bigger and easier to read at small sizes; a small x-height looks more elegant but can hurt legibility.",
+  },
+  {
+    term: "Baseline",
+    definition:
+      "The invisible line that letters 'sit' on. Most characters rest on the baseline, while parts of letters like 'p' or 'y' drop below it. When comparing fonts, aligning baselines helps you judge their proportions fairly.",
+  },
+  {
+    term: "Cap height",
+    definition:
+      "The height of a capital letter (like 'H') measured from the baseline to its top. Together with x-height, it determines how tall and open a font feels.",
+  },
+  {
+    term: "Stroke contrast",
+    definition:
+      "How much the thickness varies between the thick and thin strokes within a single letter. High contrast (very thick next to very thin) looks elegant and editorial; low contrast (nearly uniform strokes) looks sturdy and modern.",
+  },
+  {
+    term: "Weight",
+    definition:
+      "How thick or bold a font's strokes are. Common weights run from Thin and Light through Regular and Medium up to Bold, ExtraBold, and Black. Many font families include multiple weights you can switch between.",
+  },
+  {
+    term: "Kerning",
+    definition:
+      "The spacing between one specific pair of letters. Designers adjust kerning so awkward pairs (like 'A' and 'V') sit at a visually even distance instead of looking too far apart or too cramped.",
+  },
+  {
+    term: "Tracking",
+    definition:
+      "The overall spacing applied uniformly across a whole block of text — as opposed to kerning, which targets individual letter pairs. Loose tracking (wide spacing) can make headlines feel airy; tight tracking makes them feel dense.",
+  },
+  {
+    term: "Leading",
+    definition:
+      "The vertical space between lines of text, measured from baseline to baseline. Generous leading improves readability in paragraphs; tight leading packs more text into less space but can feel cramped.",
+  },
+  {
+    term: "Ligature",
+    definition:
+      "Two or more letters combined into a single connected character, such as 'fi' or 'fl' joined together. Ligatures exist mainly to prevent awkward collisions between letterforms, and many fonts include them as optional features.",
+  },
+  {
+    term: "Variable font",
+    definition:
+      "A single font file that contains a whole range of variations — weight, width, slant, and more — adjustable on a sliding scale. Instead of loading separate files for Regular, Bold, and Italic, one variable font covers them all, which keeps websites fast.",
+  },
+  {
+    term: "Display font",
+    definition:
+      "A font designed for large sizes — headlines, posters, logos — rather than body text. Display fonts often have dramatic shapes, high contrast, or quirky details that would be tiring to read in a full paragraph.",
+  },
+];
+---
+
+<BaseLayout
+  title="Font Terms Glossary — 14 Typography Terms in Plain Language"
+  description="A plain-language glossary of 14 common font and typography terms: serif, sans-serif, x-height, kerning, tracking, leading, weight, ligature, variable font, and more."
+  path="/guides/font-terms-glossary/"
+>
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <nav aria-label="Breadcrumb" class="mb-6 text-sm text-slate-500">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2 text-slate-300">/</span>
+      <a href="/guides/" class="hover:text-indigo-600">Guides</a>
+      <span class="mx-2 text-slate-300">/</span>
+      <span class="text-slate-700">Font Terms Glossary</span>
+    </nav>
+
+    <article class="space-y-6">
+      <header>
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          Font Terms Glossary
+        </h1>
+        <p class="mt-4 text-lg leading-relaxed text-slate-600">
+          Typography comes with its own vocabulary, and knowing a few key terms
+          makes font identification much easier — it is hard to search for a
+          font if you cannot describe what you are looking at. Here are 14
+          common terms explained in plain language, in roughly the order you
+          are likely to encounter them.
+        </p>
+      </header>
+
+      <dl class="space-y-5">
+        {
+          terms.map(({ term, definition }) => (
+            <div class="rounded-xl border border-slate-200 bg-white p-5">
+              <dt class="text-lg font-bold text-indigo-700">{term}</dt>
+              <dd class="mt-1.5 leading-relaxed text-slate-700">{definition}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <section class="rounded-xl bg-indigo-50 p-6">
+        <h2 class="text-xl font-bold text-slate-900">Put the vocabulary to work</h2>
+        <p class="mt-2 leading-relaxed text-slate-600">
+          Now that you can describe what you see, try identifying a font: answer
+          a few questions about its appearance, or compare your image against
+          popular fonts side by side.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <a
+            href="/identify/"
+            class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+          >
+            Q&amp;A Font Finder
+          </a>
+          <a
+            href="/font-identifier-from-image/"
+            class="rounded-lg border border-indigo-200 bg-white px-4 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50"
+          >
+            Identify from Image
+          </a>
+          <a
+            href="/guides/how-to-identify-a-font-from-an-image/"
+            class="rounded-lg border border-indigo-200 bg-white px-4 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50"
+          >
+            Identification Guide
+          </a>
+        </div>
+      </section>
+    </article>
+  </div>
+</BaseLayout>

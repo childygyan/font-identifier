@@ -1,0 +1,358 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  FONTS,
+  CATEGORY_LABELS,
+  CATEGORY_DESCRIPTIONS,
+  MOODS,
+  googleFontsUrlMany,
+  type FontCategory,
+} from "../data/fonts";
+
+// Compact serializable shape for the client: { n: name, s: slug, c: category, p: popularity, w: weights, m: moods, t: tags }
+const compact = FONTS.map((f) => ({
+  n: f.name,
+  s: f.slug,
+  c: f.category,
+  p: f.popularity,
+  w: f.weights,
+  m: f.moods,
+  t: f.tags,
+}));
+const fontsJson = JSON.stringify(compact);
+
+// Progressive font loading: only the top 24 by popularity ship in <head>.
+// The rest load in batches via IntersectionObserver in the inline script.
+const top24 = [...FONTS].sort((a, b) => b.popularity - a.popularity).slice(0, 24);
+const top24Url = googleFontsUrlMany(top24);
+
+const categories = Object.keys(CATEGORY_LABELS) as FontCategory[];
+const counts = new Map<FontCategory, number>();
+for (const f of FONTS) counts.set(f.category, (counts.get(f.category) ?? 0) + 1);
+
+const title = "Browse 148 Free Fonts — Searchable Font Library";
+const description =
+  "Browse and search 148 free Google Fonts with live previews. Filter by style, mood and popularity, then preview any font with your own text.";
+---
+
+<BaseLayout title={title} description={description} path="/browse/">
+  <!-- BaseLayout has no head slot, so the font stylesheet goes here (browsers apply it). -->
+  <link href={top24Url} rel="stylesheet" />
+
+  <section class="mx-auto max-w-6xl px-4 py-10">
+    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+      Browse Free Fonts
+    </h1>
+    <p class="mt-3 max-w-2xl text-slate-600">
+      Search {FONTS.length} free, open-licensed fonts. Filter by style or mood, type your own
+      preview text, and click any font for details, similar fonts and pairing ideas.
+    </p>
+
+    <!-- Controls -->
+    <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4 md:p-5">
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Search</span>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Font name or tag…"
+            class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          />
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Mood</span>
+          <select
+            id="mood-select"
+            class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          >
+            <option value="all">All moods</option>
+            {MOODS.map((mood) => (
+              <option value={mood}>{mood.charAt(0).toUpperCase() + mood.slice(1)}</option>
+            ))}
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Sort</span>
+          <select
+            id="sort-select"
+            class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          >
+            <option value="popular">Most popular</option>
+            <option value="az">A–Z</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Preview size · <span id="size-value">40</span>px
+          </span>
+          <input
+            id="size-slider"
+            type="range"
+            min="20"
+            max="72"
+            value="40"
+            class="w-full accent-indigo-600"
+          />
+        </label>
+      </div>
+
+      <div class="mt-4">
+        <span class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Category</span>
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Font category">
+          <button
+            type="button"
+            data-category="all"
+            class="cat-chip rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white"
+          >
+            All ({FONTS.length})
+          </button>
+          {categories.map((cat) => (
+            <button
+              type="button"
+              data-category={cat}
+              title={CATEGORY_DESCRIPTIONS[cat]}
+              class="cat-chip rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:ring-indigo-400"
+            >
+              {CATEGORY_LABELS[cat]} ({counts.get(cat) ?? 0})
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Preview text</span>
+          <input
+            id="preview-input"
+            type="text"
+            value="The quick brown fox"
+            maxlength="80"
+            class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          />
+        </label>
+      </div>
+    </div>
+
+    <p id="result-count" class="mt-6 text-sm text-slate-500" aria-live="polite"></p>
+
+    <div id="font-grid" class="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+    <p class="mt-8 text-sm text-slate-500">
+      Fonts render via Google Fonts. All {FONTS.length} fonts are free and open-licensed —
+      click any card for a full preview, similar fonts and a download link.
+    </p>
+  </section>
+
+  <script type="application/json" id="font-data" set:html={fontsJson} />
+
+  <script
+    is:inline
+    define:vars={{ catLabels: CATEGORY_LABELS, totalFonts: FONTS.length }}
+  >
+    (function () {
+      var raw = JSON.parse(document.getElementById("font-data").textContent || "[]");
+      var bySlug = {};
+      raw.forEach(function (f) { bySlug[f.s] = f; });
+
+      var FALLBACK = {
+        serif: "Georgia, 'Times New Roman', serif",
+        "sans-serif": "system-ui, -apple-system, 'Segoe UI', sans-serif",
+        display: "system-ui, -apple-system, sans-serif",
+        handwritten: "'Comic Sans MS', 'Chalkboard SE', cursive",
+        monospace: "ui-monospace, 'Cascadia Mono', monospace",
+      };
+
+      // Fonts already served by the <link> in the page (top 24 by popularity).
+      var loaded = {};
+      raw
+        .slice()
+        .sort(function (a, b) { return b.p - a.p; })
+        .slice(0, 24)
+        .forEach(function (f) { loaded[f.s] = true; });
+
+      var state = {
+        q: "",
+        category: "all",
+        mood: "all",
+        sort: "popular",
+        text: "The quick brown fox",
+        size: 40,
+      };
+
+      var grid = document.getElementById("font-grid");
+      var countEl = document.getElementById("result-count");
+      grid.style.setProperty("--preview-size", state.size + "px");
+
+      // Support /browse/?q=tag deep-links (used by tag chips on font detail pages).
+      try {
+        var initialQ = new URLSearchParams(window.location.search).get("q");
+        if (initialQ) {
+          state.q = initialQ;
+          document.getElementById("search-input").value = initialQ;
+        }
+      } catch (e) { /* ignore */ }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function capitalize(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1);
+      }
+
+      // ---- Progressive font loading -------------------------------------
+      // Fonts beyond the initial 24 load in batches as their cards scroll
+      // into view. Pending families are coalesced into a single css2 request.
+      var pending = {};
+      var pendingCount = 0;
+      var flushTimer = null;
+
+      function cssUrl(fonts) {
+        var fams = fonts.map(function (f) {
+          return "family=" + f.n.replace(/ /g, "+") + ":wght@" + f.w.join(";");
+        });
+        return "https://fonts.googleapis.com/css2?" + fams.join("&") + "&display=swap";
+      }
+
+      function scheduleFlush() {
+        if (flushTimer !== null) return;
+        flushTimer = setTimeout(flushPending, 250);
+      }
+
+      function flushPending() {
+        flushTimer = null;
+        if (pendingCount === 0) return;
+        var batch = [];
+        for (var slug in pending) {
+          if (batch.length >= 12) break;
+          batch.push(bySlug[slug]);
+          delete pending[slug];
+          pendingCount--;
+        }
+        batch.forEach(function (f) { loaded[f.s] = true; });
+        var link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = cssUrl(batch);
+        document.head.appendChild(link);
+      }
+
+      function queueFont(f) {
+        if (loaded[f.s] || pending[f.s]) return;
+        pending[f.s] = true;
+        pendingCount++;
+        scheduleFlush();
+      }
+
+      var observer = null;
+      function observeCards() {
+        if (observer) observer.disconnect();
+        observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) {
+                var f = bySlug[e.target.getAttribute("data-slug")];
+                if (f) queueFont(f);
+                observer.unobserve(e.target);
+              }
+            });
+          },
+          { rootMargin: "600px" }
+        );
+        grid.querySelectorAll(".font-card").forEach(function (el) {
+          observer.observe(el);
+        });
+      }
+
+      // ---- Rendering ----------------------------------------------------
+      function filtered() {
+        var q = state.q.trim().toLowerCase();
+        var list = raw.filter(function (f) {
+          if (state.category !== "all" && f.c !== state.category) return false;
+          if (state.mood !== "all" && f.m.indexOf(state.mood) === -1) return false;
+          if (q) {
+            var hay = (f.n + " " + f.t.join(" ")).toLowerCase();
+            if (hay.indexOf(q) === -1) return false;
+          }
+          return true;
+        });
+        if (state.sort === "az") {
+          list.sort(function (a, b) { return a.n.localeCompare(b.n); });
+        } else {
+          list.sort(function (a, b) { return b.p - a.p; });
+        }
+        return list;
+      }
+
+      function cardHtml(f) {
+        var moods = f.m.slice(0, 3).map(capitalize).join(", ");
+        return (
+          '<a href="/fonts/' + f.s + '/" data-slug="' + f.s + '" ' +
+          'class="font-card group flex flex-col rounded-xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md">' +
+          '<p class="mb-4 min-h-[3.5rem] leading-snug text-slate-900" style="font-family:\'' + escapeHtml(f.n) + "', " + FALLBACK[f.c] + "; font-size: var(--preview-size, 40px);\">" +
+          escapeHtml(state.text) +
+          "</p>" +
+          '<h2 class="text-base font-bold text-slate-900 group-hover:text-indigo-600">' + escapeHtml(f.n) + "</h2>" +
+          '<p class="mt-1 text-xs text-slate-500">' + escapeHtml(catLabels[f.c]) + " · " + escapeHtml(moods) + "</p>" +
+          "</a>"
+        );
+      }
+
+      function render() {
+        var list = filtered();
+        grid.innerHTML = list.map(cardHtml).join("");
+        countEl.textContent =
+          "Showing " + list.length + " of " + totalFonts + " fonts";
+        observeCards();
+      }
+
+      // ---- Controls -----------------------------------------------------
+      document.getElementById("search-input").addEventListener("input", function (e) {
+        state.q = e.target.value;
+        render();
+      });
+
+      document.querySelectorAll(".cat-chip").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          state.category = btn.getAttribute("data-category");
+          document.querySelectorAll(".cat-chip").forEach(function (b) {
+            var active = b === btn;
+            b.className = active
+              ? "cat-chip rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white"
+              : "cat-chip rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:ring-indigo-400";
+          });
+          render();
+        });
+      });
+
+      document.getElementById("mood-select").addEventListener("change", function (e) {
+        state.mood = e.target.value;
+        render();
+      });
+
+      document.getElementById("sort-select").addEventListener("change", function (e) {
+        state.sort = e.target.value;
+        render();
+      });
+
+      document.getElementById("preview-input").addEventListener("input", function (e) {
+        state.text = e.target.value || "The quick brown fox";
+        render();
+      });
+
+      var sizeSlider = document.getElementById("size-slider");
+      var sizeValue = document.getElementById("size-value");
+      sizeSlider.addEventListener("input", function (e) {
+        state.size = parseInt(e.target.value, 10);
+        sizeValue.textContent = String(state.size);
+        grid.style.setProperty("--preview-size", state.size + "px");
+      });
+
+      render();
+    })();
+  </script>
+</BaseLayout>

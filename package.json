@@ -1,0 +1,1 @@
+{"dependencies":{"@astrojs/sitemap":"^3.7.4","astro":"^5.13.0"},"devDependencies":{"@tailwindcss/vite":"^4.1.12","tailwindcss":"^4.1.12","typescript":"^5.9.2"},"name":"font-identifier","private":true,"scripts":{"build":"astro build","dev":"astro dev"},"type":"module","version":"1.0.0"}

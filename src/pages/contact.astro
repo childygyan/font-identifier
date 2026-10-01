@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Contact — Font Identifier"
+  description="Contact Font Identifier: report a wrong match, suggest a font for the library, or ask a question."
+  path="/contact/"
+>
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <nav class="text-sm text-slate-500">
+      <a href="/" class="hover:text-indigo-600">Home</a> <span class="mx-1">/</span> Contact
+    </nav>
+    <h1 class="mt-4 text-4xl font-extrabold tracking-tight text-slate-900">Contact</h1>
+
+    <div class="mt-8 space-y-6 text-slate-700 leading-relaxed">
+      <p>
+        Found a wrong match, want a font added to the library, or spotted a bug? We'd like to
+        hear about it. Font Identifier is a small independent project, so replies may take a
+        few days.
+      </p>
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+        <h2 class="text-lg font-bold text-slate-900">Get in touch</h2>
+        <ul class="mt-3 space-y-3 text-sm">
+          <li>
+            <span class="font-semibold text-slate-900">GitHub issues</span> — the fastest way to
+            report bugs or suggest fonts. Open an issue on the project's repository:
+            <a href="https://github.com/childygyan/font-identifier" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">childygyan/font-identifier</a>
+          </li>
+          <li>
+            <span class="font-semibold text-slate-900">LinkedIn</span> — connect with Firoz Khan:
+            <a href="https://www.linkedin.com/in/firozkhan" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">linkedin.com/in/firozkhan</a>
+          </li>
+        </ul>
+        <p class="mt-4 text-xs text-slate-500">
+          Please don't send images containing personal or sensitive information — the tools run
+          entirely in your browser, and there's no need to share your uploads with us.
+        </p>
+      </div>
+      <p>
+        Before writing in, you may find the answer in our
+        <a href="/guides/" class="text-indigo-600 hover:underline">font guides</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

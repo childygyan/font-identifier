@@ -1,0 +1,108 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="How to Find What Font a Website Uses — 3 Easy Methods"
+  description="Learn three practical ways to find out what font a website uses: inspecting with Chrome DevTools, using a font-inspector browser extension, and checking the page source. Step-by-step and free."
+  path="/guides/how-to-find-what-font-a-website-uses/"
+>
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <nav aria-label="Breadcrumb" class="mb-6 text-sm text-slate-500">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2 text-slate-300">/</span>
+      <a href="/guides/" class="hover:text-indigo-600">Guides</a>
+      <span class="mx-2 text-slate-300">/</span>
+      <span class="text-slate-700">How to Find What Font a Website Uses</span>
+    </nav>
+
+    <article class="space-y-6">
+      <header>
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          How to Find What Font a Website Uses
+        </h1>
+        <p class="mt-4 text-lg leading-relaxed text-slate-600">
+          Unlike a flat image, a website's text is rendered live by your
+          browser — which means the font name is sitting right there in the
+          page's code. Here are three free methods to find it, from quickest to
+          most thorough. All steps below are for Google Chrome on desktop; other
+          Chromium browsers (Edge, Brave, Opera) work the same way.
+        </p>
+      </header>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-bold text-slate-900">Method 1: Inspect with DevTools (most reliable)</h2>
+        <p class="leading-relaxed text-slate-700">
+          Your browser's built-in developer tools show exactly which font is
+          rendering any piece of text. No extensions needed.
+        </p>
+        <ol class="list-decimal space-y-2 pl-6 text-slate-700">
+          <li>Open the website and find the text whose font you want to identify.</li>
+          <li>Right-click directly on that text and choose <strong>Inspect</strong>. The DevTools panel opens with the corresponding HTML element highlighted.</li>
+          <li>In the right-hand panel, make sure the <strong>Computed</strong> tab is selected (not "Styles").</li>
+          <li>Scroll down to the <strong>font-family</strong> property. The first name listed is the font the page requests; the browser falls back to the later names only if the first is unavailable.</li>
+          <li>To confirm what is actually rendering (not just requested), scroll further down in the Computed tab to the <strong>Rendered Fonts</strong> section at the bottom — it names the exact font file in use.</li>
+        </ol>
+        <p class="leading-relaxed text-slate-700">
+          Tip: if the font name looks generic (like a system font stack), the
+          site may be using the visitor's built-in system fonts rather than a
+          named webfont. In that case there is no downloadable font to find —
+          but you can match its look with a similar font from our
+          <a href="/browse/" class="font-medium text-indigo-600 hover:underline">font browser</a>.
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-bold text-slate-900">Method 2: Use a font-inspector browser extension</h2>
+        <p class="leading-relaxed text-slate-700">
+          If you do this often, a browser extension is faster than opening
+          DevTools each time. <strong>WhatFont</strong> is a well-known free
+          third-party extension for Chrome: after installing it from the Chrome
+          Web Store, you click its toolbar icon and then hover over any text on
+          the page to see the font name, size, weight, and line height in a
+          small tooltip.
+        </p>
+        <p class="leading-relaxed text-slate-700">
+          A note of honesty: we have no affiliation with WhatFont or its
+          developers. Extensions can occasionally misreport fonts on pages that
+          load text as images or use heavy font substitution, so if a result
+          looks suspicious, double-check it with Method 1.
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-bold text-slate-900">Method 3: Check the page source for font links</h2>
+        <p class="leading-relaxed text-slate-700">
+          Most websites load webfonts through a link in the page's HTML. To see
+          them:
+        </p>
+        <ol class="list-decimal space-y-2 pl-6 text-slate-700">
+          <li>Right-click anywhere on the page (not on an image) and choose <strong>View page source</strong>.</li>
+          <li>Press Ctrl+F (or Cmd+F on Mac) and search for <strong>"fonts.googleapis"</strong> or <strong>"font"</strong>.</li>
+          <li>Look for <code class="rounded bg-slate-100 px-1.5 py-0.5 text-sm text-slate-800">&lt;link&gt;</code> tags pointing to font files — the URL usually contains the font family name (for example, <code class="rounded bg-slate-100 px-1.5 py-0.5 text-sm text-slate-800">family=Inter</code> means the site uses Inter).</li>
+        </ol>
+        <p class="leading-relaxed text-slate-700">
+          This method tells you which fonts the page loads, but not necessarily
+          which one styles a specific headline — for that, Method 1 is more
+          precise. It is still useful when DevTools feels like overkill and you
+          just want the site's overall font list.
+        </p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-bold text-slate-900">What to do with the font name</h2>
+        <p class="leading-relaxed text-slate-700">
+          Once you have the name, search for it in our
+          <a href="/browse/" class="font-medium text-indigo-600 hover:underline">font browser</a>
+          to preview it and check its weights and styles. If it turns out to be
+          a paid commercial font, try our
+          <a href="/identify/" class="font-medium text-indigo-600 hover:underline">Q&amp;A font finder</a>
+          to discover a similar free alternative. And if all you have is a
+          screenshot of the site rather than the live page, our guide on
+          <a href="/guides/how-to-identify-a-font-from-an-image/" class="font-medium text-indigo-600 hover:underline">identifying a font from an image</a>
+          covers that case.
+        </p>
+      </section>
+    </article>
+  </div>
+</BaseLayout>

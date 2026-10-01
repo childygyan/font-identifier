@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://font-identifier.pages.dev/sitemap-index.xml

@@ -1,0 +1,309 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  FONTS,
+  googleFontsUrl,
+  googleFontsUrlMany,
+  similarFonts,
+  CATEGORY_LABELS,
+  type FontEntry,
+} from "../../data/fonts";
+
+export function getStaticPaths() {
+  return FONTS.map((font) => ({
+    params: { slug: font.slug },
+    props: { font },
+  }));
+}
+
+const { font } = Astro.props as { font: FontEntry };
+
+const fontUrl = googleFontsUrl(font);
+const similars = similarFonts(font, 6);
+const similarsUrl = googleFontsUrlMany(similars);
+const specimenUrl = `https://fonts.google.com/specimen/${font.name.replace(/ /g, "+")}`;
+
+const byPopularity = [...FONTS].sort((a, b) => b.popularity - a.popularity);
+const idx = byPopularity.findIndex((f) => f.slug === font.slug);
+const prev = idx > 0 ? byPopularity[idx - 1] : undefined;
+const next = idx >= 0 && idx < byPopularity.length - 1 ? byPopularity[idx + 1] : undefined;
+
+const title = `${font.name} — Free Font Preview & Similar Fonts`;
+const description = font.description;
+
+const SERIF_LABELS: Record<FontEntry["serif"], string> = {
+  none: "None (sans-serif style)",
+  slab: "Slab",
+  bracketed: "Bracketed",
+  modern: "Modern (Didone)",
+  oldstyle: "Old-style",
+};
+const CONTRAST_LABELS: Record<FontEntry["contrast"], string> = {
+  low: "Low — even strokes",
+  medium: "Medium",
+  high: "High — thick-and-thin",
+};
+const WEIGHT_LABELS: Record<FontEntry["weight"], string> = {
+  light: "Light",
+  regular: "Regular",
+  bold: "Bold",
+  black: "Extra bold",
+};
+const XHEIGHT_LABELS: Record<FontEntry["xHeight"], string> = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+};
+
+const FALLBACK: Record<FontEntry["category"], string> = {
+  serif: "Georgia, 'Times New Roman', serif",
+  "sans-serif": "system-ui, -apple-system, sans-serif",
+  display: "system-ui, -apple-system, sans-serif",
+  handwritten: "'Comic Sans MS', 'Chalkboard SE', cursive",
+  monospace: "ui-monospace, monospace",
+};
+
+const mainStack = `'${font.name}', ${FALLBACK[font.category]}`;
+
+/** Generic, honest pairing suggestion derived from the font's category and mood. */
+function pairingIdea(f: FontEntry): string {
+  const mood = f.moods[0] ?? "versatile";
+  switch (f.category) {
+    case "serif":
+      return (
+        `${f.name} pairs well with a clean sans-serif such as Inter or Open Sans for body text, ` +
+        `letting the serif headlines carry the ${mood} tone. Keep supporting text simple so the ` +
+        `contrast between the two styles does the visual work.`
+      );
+    case "sans-serif":
+      return (
+        `${f.name} works well alongside an elegant serif such as Playfair Display or Merriweather ` +
+        `when you need contrast for headlines. For a ${mood} feel, stick to two families and use ` +
+        `weight — not more fonts — to build hierarchy.`
+      );
+    case "display":
+      return (
+        `${f.name} is a statement face, so pair it with a quiet neutral sans-serif such as Inter ` +
+        `for everything else. One display font per design is enough — let it own the ${mood} ` +
+        `headlines while the sans handles readability.`
+      );
+    case "handwritten":
+      return (
+        `${f.name} pairs best with a simple, unobtrusive sans-serif so the script stays the star. ` +
+        `Use it sparingly for accents and headings in ${mood} designs, and set longer passages in ` +
+        `the neutral partner font.`
+      );
+    case "monospace":
+      return (
+        `${f.name} sits comfortably next to a clean sans-serif for headings while the mono handles ` +
+        `code or technical details. The pairing suits ${mood} interfaces where structure and ` +
+        `clarity matter most.`
+      );
+  }
+}
+---
+
+<BaseLayout title={title} description={description} path={`/fonts/${font.slug}/`}>
+  <!-- BaseLayout has no head slot, so the font stylesheets go here (browsers apply them). -->
+  <link href={fontUrl} rel="stylesheet" />
+  <link href={similarsUrl} rel="stylesheet" />
+
+  <section class="mx-auto max-w-6xl px-4 py-10">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
+      <ol class="flex flex-wrap items-center gap-1.5">
+        <li><a href="/" class="hover:text-indigo-600">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/browse/" class="hover:text-indigo-600">Browse</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="font-medium text-slate-800">{font.name}</li>
+      </ol>
+    </nav>
+
+    <!-- H1 rendered in the font itself -->
+    <h1
+      class="mt-6 text-5xl leading-tight text-slate-900 md:text-6xl"
+      style={`font-family: ${mainStack};`}
+    >
+      {font.name}
+    </h1>
+    <p class="mt-3 text-sm text-slate-500">
+      {CATEGORY_LABELS[font.category]} · {font.moods.map((m) => m.charAt(0).toUpperCase() + m.slice(1)).join(", ")}
+    </p>
+
+    <!-- Live preview -->
+    <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5 md:p-8">
+      <label class="block">
+        <span class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Try your own text
+        </span>
+        <input
+          id="preview-input"
+          type="text"
+          value="The quick brown fox jumps over the lazy dog"
+          maxlength="120"
+          class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+      </label>
+      <p
+        id="preview-text"
+        class="mt-5 text-3xl leading-snug text-slate-900 md:text-4xl"
+        style={`font-family: ${mainStack};`}
+      >
+        The quick brown fox jumps over the lazy dog
+      </p>
+      <p
+        id="preview-charset"
+        class="mt-6 break-words text-xl leading-relaxed text-slate-700"
+        style={`font-family: ${mainStack};`}
+      >
+        ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+        abcdefghijklmnopqrstuvwxyz<br />
+        0123456789 &amp;!?@#%
+      </p>
+    </div>
+
+    <!-- About -->
+    <div class="mt-10 max-w-3xl">
+      <h2 class="text-2xl font-bold tracking-tight text-slate-900">About {font.name}</h2>
+      <p class="mt-3 leading-relaxed text-slate-600">{font.description}</p>
+      <p class="mt-3 text-sm leading-relaxed text-slate-500">
+        {font.name} is a free, open-licensed font available on Google Fonts. Use the button below
+        to get it for your own projects.
+      </p>
+    </div>
+
+    <!-- Characteristics -->
+    <div class="mt-10 max-w-3xl">
+      <h2 class="text-2xl font-bold tracking-tight text-slate-900">Characteristics</h2>
+      <dl class="mt-4 overflow-hidden rounded-xl border border-slate-200">
+        <div class="grid grid-cols-3 gap-4 border-b border-slate-200 bg-white px-4 py-3">
+          <dt class="text-sm font-medium text-slate-500">Category</dt>
+          <dd class="col-span-2 text-sm font-semibold text-slate-900">{CATEGORY_LABELS[font.category]}</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3">
+          <dt class="text-sm font-medium text-slate-500">Serif style</dt>
+          <dd class="col-span-2 text-sm font-semibold text-slate-900">{SERIF_LABELS[font.serif]}</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 border-b border-slate-200 bg-white px-4 py-3">
+          <dt class="text-sm font-medium text-slate-500">Stroke contrast</dt>
+          <dd class="col-span-2 text-sm font-semibold text-slate-900">{CONTRAST_LABELS[font.contrast]}</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3">
+          <dt class="text-sm font-medium text-slate-500">Typical weight</dt>
+          <dd class="col-span-2 text-sm font-semibold text-slate-900">{WEIGHT_LABELS[font.weight]}</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 border-b border-slate-200 bg-white px-4 py-3">
+          <dt class="text-sm font-medium text-slate-500">X-height</dt>
+          <dd class="col-span-2 text-sm font-semibold text-slate-900">{XHEIGHT_LABELS[font.xHeight]}</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 bg-slate-50 px-4 py-3">
+          <dt class="text-sm font-medium text-slate-500">Moods</dt>
+          <dd class="col-span-2 text-sm font-semibold text-slate-900">
+            {font.moods.map((m) => m.charAt(0).toUpperCase() + m.slice(1)).join(", ")}
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Tags -->
+    <div class="mt-8 max-w-3xl">
+      <h2 class="text-lg font-bold text-slate-900">Tags</h2>
+      <div class="mt-3 flex flex-wrap gap-2">
+        {font.tags.map((tag) => (
+          <a
+            href={`/browse/?q=${encodeURIComponent(tag)}`}
+            class="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700 hover:bg-indigo-100 hover:text-indigo-700"
+          >
+            {tag}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Similar fonts -->
+    <div class="mt-12">
+      <h2 class="text-2xl font-bold tracking-tight text-slate-900">Similar fonts</h2>
+      <p class="mt-2 text-sm text-slate-500">
+        Fonts with matching style traits — same category, serifs, contrast and mood.
+      </p>
+      <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {similars.map((s) => (
+          <a
+            href={`/fonts/${s.slug}/`}
+            class="group rounded-xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
+          >
+            <p
+              class="mb-3 text-3xl leading-snug text-slate-900"
+              style={`font-family: '${s.name}', ${FALLBACK[s.category]};`}
+            >
+              Ag
+            </p>
+            <p class="text-base font-bold text-slate-900 group-hover:text-indigo-600">{s.name}</p>
+            <p class="mt-1 text-xs text-slate-500">{CATEGORY_LABELS[s.category]}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Get this font -->
+    <div class="mt-12 rounded-2xl bg-indigo-600 p-6 text-center md:p-8">
+      <h2 class="text-xl font-bold text-white">Get {font.name}</h2>
+      <p class="mx-auto mt-2 max-w-xl text-sm text-indigo-100">
+        Free and open-licensed — download it or add it to your own site from Google Fonts.
+      </p>
+      <a
+        href={specimenUrl}
+        target="_blank"
+        rel="noopener"
+        class="mt-5 inline-block rounded-lg bg-white px-6 py-3 text-sm font-bold text-indigo-700 shadow hover:bg-indigo-50"
+      >
+        Get this font on Google Fonts
+      </a>
+    </div>
+
+    <!-- Pairing idea -->
+    <div class="mt-10 max-w-3xl">
+      <h2 class="text-2xl font-bold tracking-tight text-slate-900">Font pairing idea</h2>
+      <p class="mt-3 leading-relaxed text-slate-600">{pairingIdea(font)}</p>
+    </div>
+
+    <!-- Prev / next -->
+    <nav class="mt-12 flex items-center justify-between gap-4 border-t border-slate-200 pt-6" aria-label="More fonts">
+      <div>
+        {prev ? (
+          <a href={`/fonts/${prev.slug}/`} class="group block">
+            <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">← More popular</span>
+            <span class="block text-base font-bold text-slate-800 group-hover:text-indigo-600">{prev.name}</span>
+          </a>
+        ) : (
+          <span class="text-sm text-slate-400">Most popular font</span>
+        )}
+      </div>
+      <a href="/browse/" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:border-indigo-400 hover:text-indigo-600">
+        All fonts
+      </a>
+      <div class="text-right">
+        {next ? (
+          <a href={`/fonts/${next.slug}/`} class="group block">
+            <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Next →</span>
+            <span class="block text-base font-bold text-slate-800 group-hover:text-indigo-600">{next.name}</span>
+          </a>
+        ) : (
+          <span class="text-sm text-slate-400">Last in the library</span>
+        )}
+      </div>
+    </nav>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var input = document.getElementById("preview-input");
+      var text = document.getElementById("preview-text");
+      if (!input || !text) return;
+      input.addEventListener("input", function () {
+        text.textContent = input.value || "The quick brown fox jumps over the lazy dog";
+      });
+    })();
+  </script>
+</BaseLayout>

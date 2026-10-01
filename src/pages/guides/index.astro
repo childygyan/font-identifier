@@ -1,0 +1,98 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const guides = [
+  {
+    href: "/guides/how-to-identify-a-font-from-an-image/",
+    title: "How to Identify a Font from an Image",
+    description:
+      "Found a font in a screenshot, logo, or photo and want to know its name? This step-by-step walkthrough shows you how to capture a clean sample, note the font's characteristics, and use our free visual comparison tool to track down a match.",
+  },
+  {
+    href: "/guides/free-font-identifier-tools/",
+    title: "Free Font Identifier Tools",
+    description:
+      "Our three free tools compared side by side — plus honest mentions of well-known external options like WhatTheFont, Matcherator, and Identifont. Find out which approach fits your situation so you can pick the right tool the first time.",
+  },
+  {
+    href: "/guides/how-to-find-what-font-a-website-uses/",
+    title: "How to Find What Font a Website Uses",
+    description:
+      "Like the typography on a website and want to use the same font? Learn three practical methods: inspecting with browser DevTools, using a font-inspector extension, and checking the page source for font links. Step-by-step for Chrome.",
+  },
+  {
+    href: "/guides/font-terms-glossary/",
+    title: "Font Terms Glossary",
+    description:
+      "Serif, x-height, kerning, leading — typography is full of jargon. This plain-language glossary defines 14 common font terms in one or two sentences each, so you can describe fonts accurately and get better matches.",
+  },
+];
+---
+
+<BaseLayout
+  title="Font Guides — Free Font Identification Help | Font Identifier"
+  description="Free guides on identifying fonts: how to identify a font from an image, free font identifier tools, how to find a website's font, and a plain-language font terms glossary."
+  path="/guides/"
+>
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <nav aria-label="Breadcrumb" class="mb-6 text-sm text-slate-500">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2 text-slate-300">/</span>
+      <span class="text-slate-700">Guides</span>
+    </nav>
+
+    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+      Font Guides
+    </h1>
+    <p class="mt-4 text-lg leading-relaxed text-slate-600">
+      Practical, jargon-free guides to help you identify fonts and understand
+      typography. Whether you are working from a screenshot, a website, or just
+      a vague memory of "that nice font," start here.
+    </p>
+
+    <div class="mt-10 space-y-5">
+      {
+        guides.map((guide) => (
+          <a
+            href={guide.href}
+            class="block rounded-xl border border-slate-200 bg-white p-6 transition hover:border-indigo-300 hover:shadow-md"
+          >
+            <h2 class="text-xl font-bold text-slate-900">{guide.title}</h2>
+            <p class="mt-2 leading-relaxed text-slate-600">{guide.description}</p>
+            <span class="mt-3 inline-block text-sm font-semibold text-indigo-600">
+              Read the guide &rarr;
+            </span>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="mt-12 rounded-xl bg-indigo-50 p-6">
+      <h2 class="text-lg font-bold text-slate-900">Prefer to skip straight to the tools?</h2>
+      <p class="mt-2 text-slate-600">
+        Upload an image to compare it against popular fonts, answer a few
+        questions about the font's appearance, or browse the full font library.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <a
+          href="/font-identifier-from-image/"
+          class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+        >
+          Identify from Image
+        </a>
+        <a
+          href="/identify/"
+          class="rounded-lg border border-indigo-200 bg-white px-4 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50"
+        >
+          Q&amp;A Font Finder
+        </a>
+        <a
+          href="/browse/"
+          class="rounded-lg border border-indigo-200 bg-white px-4 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50"
+        >
+          Browse Fonts
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

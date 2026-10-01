@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="About — Font Identifier"
+  description="About Font Identifier: a free font identifier and font finder built by FK Digital Media to help designers and developers identify fonts."
+  path="/about/"
+>
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <nav class="text-sm text-slate-500">
+      <a href="/" class="hover:text-indigo-600">Home</a> <span class="mx-1">/</span> About
+    </nav>
+    <h1 class="mt-4 text-4xl font-extrabold tracking-tight text-slate-900">About Font Identifier</h1>
+
+    <div class="mt-8 space-y-6 text-slate-700 leading-relaxed">
+      <p>
+        Font Identifier is a free font finder built for designers, developers, and anyone who has
+        ever stared at a beautiful piece of text and wondered: <em>what font is that?</em>
+      </p>
+      <p>
+        The site offers three simple tools: identify a font from an image with guided visual
+        comparison, answer five quick questions to get ranked font matches, or browse a curated
+        library of 148 popular free fonts. Everything runs in your browser — no sign-up, no
+        uploads to a server, no cost.
+      </p>
+      <h2 class="text-2xl font-bold text-slate-900 pt-2">An honest note on how it works</h2>
+      <p>
+        Many "font identifier" tools imply they use AI to magically name any font from a photo.
+        We don't make that claim. Our tools match what you describe or upload against a curated
+        library of popular free fonts using guided questions and side-by-side visual comparison.
+        It is a practical matching aid — transparent about what it can and cannot do.
+      </p>
+      <h2 class="text-2xl font-bold text-slate-900 pt-2">Who built this</h2>
+      <p>
+        Font Identifier is an independent project by <strong>Firoz Khan</strong> of
+        <strong>FK Digital Media</strong> — the same maker behind a growing collection of free,
+        genuinely useful web tools. Font previews on this site are rendered via Google Fonts;
+        all listed fonts are free and open-licensed. This site is not affiliated with Google.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

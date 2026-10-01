@@ -1,0 +1,142 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Free Font Identifier Tools — Compare Your Options"
+  description="A honest overview of free font identifier tools: our image comparison tool, Q&A font finder, and font browser — plus how external options like WhatTheFont, Matcherator, and Identifont work."
+  path="/guides/free-font-identifier-tools/"
+>
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <nav aria-label="Breadcrumb" class="mb-6 text-sm text-slate-500">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2 text-slate-300">/</span>
+      <a href="/guides/" class="hover:text-indigo-600">Guides</a>
+      <span class="mx-2 text-slate-300">/</span>
+      <span class="text-slate-700">Free Font Identifier Tools</span>
+    </nav>
+
+    <article class="space-y-6">
+      <header>
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          Free Font Identifier Tools
+        </h1>
+        <p class="mt-4 text-lg leading-relaxed text-slate-600">
+          There are several free ways to identify a font, and they work very
+          differently: some analyze an uploaded image automatically, some ask
+          you questions about the font's appearance, and some let you compare
+          visually. Here is an honest look at each approach — starting with our
+          own free tools.
+        </p>
+      </header>
+
+      <section class="space-y-5">
+        <h2 class="text-2xl font-bold text-slate-900">Our free tools</h2>
+
+        <div class="rounded-xl border border-slate-200 p-6">
+          <h3 class="text-lg font-bold text-slate-900">
+            <a href="/font-identifier-from-image/" class="text-indigo-600 hover:underline">Font Identifier from Image</a>
+          </h3>
+          <p class="mt-2 leading-relaxed text-slate-700">
+            <strong>What it does:</strong> you upload a screenshot or photo and
+            type the text it contains; the tool renders your text in a range of
+            popular fonts right next to your image so you can compare
+            side by side.
+          </p>
+          <p class="mt-2 leading-relaxed text-slate-700">
+            <strong>Best for:</strong> when you have a clear image and want to
+            visually confirm a match yourself. Note that it does not use AI —
+            the comparison is done by your eyes, which is slower than automatic
+            recognition but gives you full control over the verdict.
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 p-6">
+          <h3 class="text-lg font-bold text-slate-900">
+            <a href="/identify/" class="text-indigo-600 hover:underline">Q&amp;A Font Finder</a>
+          </h3>
+          <p class="mt-2 leading-relaxed text-slate-700">
+            <strong>What it does:</strong> you answer a short series of
+            questions about the font's appearance — serif or sans-serif, weight,
+            contrast, overall mood — and it suggests the closest matches from
+            our font database.
+          </p>
+          <p class="mt-2 leading-relaxed text-slate-700">
+            <strong>Best for:</strong> when you do not have a usable image, or
+            when you remember what a font looks like but cannot capture it. It
+            works best if you can describe at least the basic category and
+            weight.
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 p-6">
+          <h3 class="text-lg font-bold text-slate-900">
+            <a href="/browse/" class="text-indigo-600 hover:underline">Browse Fonts</a>
+          </h3>
+          <p class="mt-2 leading-relaxed text-slate-700">
+            <strong>What it does:</strong> a searchable library of popular
+            Google Fonts with live previews and category filters.
+          </p>
+          <p class="mt-2 leading-relaxed text-slate-700">
+            <strong>Best for:</strong> verifying a candidate you already suspect
+            ("I think this is Montserrat — let me check"), or finding a similar
+            free alternative when the original turns out to be a paid font.
+          </p>
+        </div>
+      </section>
+
+      <section class="space-y-5">
+        <h2 class="text-2xl font-bold text-slate-900">Well-known external options</h2>
+        <p class="leading-relaxed text-slate-700">
+          We are not the only option, and it would not be honest to pretend
+          otherwise. Here is what the established tools do, in our own words:
+        </p>
+
+        <div class="rounded-xl border border-slate-200 p-6">
+          <h3 class="text-lg font-bold text-slate-900">WhatTheFont (by MyFonts)</h3>
+          <p class="mt-2 leading-relaxed text-slate-700">
+            You upload an image of text and its system attempts to recognize the
+            font automatically, returning a list of likely matches from its
+            catalog. It is the best-known automatic option and handles a large
+            commercial font catalog. Results can vary with image quality, and
+            many suggested matches are paid fonts.
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 p-6">
+          <h3 class="text-lg font-bold text-slate-900">FontSquirrel Matcherator</h3>
+          <p class="mt-2 leading-relaxed text-slate-700">
+            Similar idea: upload an image and get automatic suggestions, but
+            focused on free and open-licensed fonts. Useful when you
+            specifically need a match you can use commercially at no cost.
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 p-6">
+          <h3 class="text-lg font-bold text-slate-900">Identifont</h3>
+          <p class="mt-2 leading-relaxed text-slate-700">
+            The classic question-based identifier: it asks you a series of
+            questions about distinctive letterforms (the shape of the Q, the
+            style of the g, and so on) and narrows down candidates. No image
+            needed, but it requires patience and a decent eye for letter
+            details.
+          </p>
+        </div>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-2xl font-bold text-slate-900">Which should you use?</h2>
+        <ul class="list-disc space-y-2 pl-6 text-slate-700">
+          <li><strong>Have a clear image?</strong> Try an automatic recognizer like WhatTheFont first for speed, then confirm the result with our <a href="/font-identifier-from-image/" class="font-medium text-indigo-600 hover:underline">visual comparison tool</a> — automatic suggestions are guesses, and a side-by-side check catches wrong ones.</li>
+          <li><strong>Need a free font specifically?</strong> Matcherator's free-font focus, or our tools which are built entirely around free Google Fonts, will save you from falling in love with a font you cannot afford to license.</li>
+          <li><strong>No image, just a description or memory?</strong> A question-based approach is your best bet — try our <a href="/identify/" class="font-medium text-indigo-600 hover:underline">Q&amp;A font finder</a>.</li>
+          <li><strong>Think you already know the name?</strong> Skip identification entirely and <a href="/browse/" class="font-medium text-indigo-600 hover:underline">browse the font library</a> to verify it directly.</li>
+        </ul>
+        <p class="leading-relaxed text-slate-700">
+          For a full walkthrough of the manual process, see our guide on
+          <a href="/guides/how-to-identify-a-font-from-an-image/" class="font-medium text-indigo-600 hover:underline">how to identify a font from an image</a>.
+        </p>
+      </section>
+    </article>
+  </div>
+</BaseLayout>
