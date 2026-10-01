@@ -23,11 +23,12 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         </h1>
         <p class="mt-4 text-lg leading-relaxed text-slate-600">
           You spotted a great font in a screenshot, a logo, or a photo — and now
-          you want to know its name. Our site does not use AI or automatic image
-          recognition; instead, this guide walks you through a reliable manual
-          process that works surprisingly well: capture a clean sample, describe
-          what you see, and compare it side by side with candidate fonts until
-          you find the match.
+          you want to know its name. The fastest route: upload it to our
+          <a href="/font-identifier-from-image/" class="font-medium text-indigo-600 hover:underline">automatic font finder</a>,
+          which scans the image in your browser and shows the closest matching
+          fonts with match scores. This guide walks you through getting the best
+          result from the scan — and how to verify the match yourself when you
+          want to be certain.
         </p>
       </header>
 
@@ -70,33 +71,35 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       </section>
 
       <section class="space-y-3">
-        <h2 class="text-2xl font-bold text-slate-900">Step 3: Compare your image against candidate fonts</h2>
+        <h2 class="text-2xl font-bold text-slate-900">Step 3: Run the automatic scan</h2>
         <p class="leading-relaxed text-slate-700">
-          Now open our
+          Open our
           <a href="/font-identifier-from-image/" class="font-medium text-indigo-600 hover:underline">font identifier from image</a>
-          tool. Upload your sample, type the same text you see in the image, and
-          the tool renders your text in a range of popular fonts next to your
-          upload. Scroll through and look for renderings whose letterforms match
-          your sample — pay special attention to those distinctive letters you
-          picked out in Step 2.
+          tool and upload your sample — the scan starts automatically. It splits
+          your lettering into individual letters, measures each letter's shape,
+          and compares them against 148 popular fonts, then double-checks the
+          closest candidates by rendering your text in each one. You get ranked
+          matches with match scores in seconds.
         </p>
         <p class="leading-relaxed text-slate-700">
-          Tip: compare at a large size. Small differences in stroke contrast,
-          terminal shapes, and letter proportions become obvious when the text
-          is big.
+          Check the "Text we read" box: if the scanner misread a letter, correct
+          it and the matches are re-checked instantly. If confidence is low, use
+          the crop tool to select just the words — a tight crop does more for
+          accuracy than anything else.
         </p>
       </section>
 
       <section class="space-y-3">
-        <h2 class="text-2xl font-bold text-slate-900">Step 4: Narrow it down with the Q&amp;A finder</h2>
+        <h2 class="text-2xl font-bold text-slate-900">Step 4: Verify the match yourself</h2>
         <p class="leading-relaxed text-slate-700">
-          If side-by-side comparison gives you several close candidates but no
-          clear winner, try our
-          <a href="/identify/" class="font-medium text-indigo-600 hover:underline">Q&amp;A font finder</a>.
-          Answer a few questions about the font's appearance (serif style,
-          weight, contrast, mood) and it suggests the closest matches from our
-          font database. Use it as a second opinion to cross-check what the
-          visual comparison suggested.
+          Each result card shows your scanned lettering next to the same text
+          set in the candidate font — compare them letter by letter, paying
+          special attention to the distinctive letters you picked out in Step 2
+          (the <em>g</em>, the <em>a</em>, the <em>R</em>). If several candidates
+          look close, our
+          <a href="/identify/" class="font-medium text-indigo-600 hover:underline">Q&amp;A font finder</a>
+          works as a second opinion: answer a few questions about the font's
+          appearance and cross-check its suggestions against the scan results.
         </p>
       </section>
 

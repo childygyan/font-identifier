@@ -3,9 +3,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { FONTS, googleFontsUrlMany, CATEGORY_LABELS } from "../data/fonts";
 import type { FontCategory } from "../data/fonts";
 
-const title = "Free Font Identifier — Identify Any Font in Seconds";
+const title = "What the Font? Free Font Identifier From Image";
 const description =
-  "Free font identifier: identify any font from an image, answer a few questions, or browse 148 popular Google Fonts. No sign-up — find your font in seconds.";
+  "What the font is that? Upload an image and our free font identifier automatically scans it and names the closest matching fonts. Also identify fonts by Q&A or browse 148 free Google Fonts. No sign-up.";
 
 const topFonts = [...FONTS].sort((a, b) => b.popularity - a.popularity).slice(0, 8);
 const topFontsCssUrl = googleFontsUrlMany(topFonts);
@@ -39,14 +39,14 @@ function genericFallback(category: FontCategory): string {
         Free &middot; No sign-up required
       </span>
       <h1 class="mt-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-        Free Font Identifier
+        What the Font Is That?
       </h1>
       <p class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-        Looking for a <strong class="font-semibold text-slate-800">font identifier</strong> that
-        actually helps? This <strong class="font-semibold text-slate-800">free font identifier</strong>
-        gives you three ways to track down the typeface behind any text: identify a font from an
-        image, answer a few guided questions, or browse a curated library of 148 popular fonts.
-        No sign-up, no cost — just answers.
+        This <strong class="font-semibold text-slate-800">free font identifier</strong> answers the
+        classic <strong class="font-semibold text-slate-800">what-the-font</strong> question three
+        ways: upload an image and get an <strong class="font-semibold text-slate-800">automatic scan</strong>
+        with ranked font matches, answer a few guided questions, or browse a curated library of 148
+        popular fonts. No sign-up, no cost — just answers.
       </p>
       <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <a
@@ -280,10 +280,11 @@ function genericFallback(category: FontCategory): string {
           <span class="float-right text-indigo-600 transition group-open:rotate-45">+</span>
         </summary>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">
-          Honestly: it matches against a curated library of 148 popular free fonts using visual
-          side-by-side comparison and guided questions. It is <strong class="font-semibold">not</strong>
-          AI image recognition, so if your font is not in the library it cannot name it — but
-          you will usually find a close visual match or a free alternative with a similar look.
+          Honestly: the image tool automatically scans your upload — splitting the lettering into
+          letters and comparing their shapes against our library of 148 popular free fonts — then
+          shows ranked matches with scores. Clean screenshots of common fonts usually nail it;
+          unusual, script or heavily-styled lettering may only match a close relative. The Q&amp;A
+          tool and library help you verify and find free alternatives.
         </p>
       </details>
       <details class="group rounded-xl border border-slate-200 bg-white px-5 py-4">
@@ -303,9 +304,31 @@ function genericFallback(category: FontCategory): string {
           <span class="float-right text-indigo-600 transition group-open:rotate-45">+</span>
         </summary>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">
-          Open the Identify from Image tool, upload your photo, type the visible words into the
-          comparison box, then scroll through matching fonts rendered in your exact text until
-          you spot the one that matches.
+          Open the Identify from Image tool and upload your photo — the scan starts automatically
+          and shows you the closest matching fonts with match scores. For the best result, crop
+          tightly around the words first. You can correct the text it reads if it misreads a letter.
+        </p>
+      </details>
+      <details class="group rounded-xl border border-slate-200 bg-white px-5 py-4">
+        <summary class="cursor-pointer list-none text-base font-semibold text-slate-900">
+          Is there a "what the font" app I need to download?
+          <span class="float-right text-indigo-600 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          No app needed. This what-the-font finder runs entirely in your phone or desktop browser —
+          upload or paste a screenshot and get your answer in seconds, free, with no account.
+        </p>
+      </details>
+      <details class="group rounded-xl border border-slate-200 bg-white px-5 py-4">
+        <summary class="cursor-pointer list-none text-base font-semibold text-slate-900">
+          What does "what the font" mean?
+          <span class="float-right text-indigo-600 transition group-open:rotate-45">+</span>
+        </summary>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          It's the question every designer asks when they spot lettering they love but can't name —
+          "what the font is that?" A what-the-font tool answers it from a picture: you upload an
+          image of the text, and the tool identifies the typeface (or the closest free match).
+          This site is an independent free tool and is not affiliated with MyFonts' WhatTheFont.
         </p>
       </details>
     </div>
@@ -318,7 +341,7 @@ function genericFallback(category: FontCategory): string {
         Found some text you can&rsquo;t name?
       </h2>
       <p class="mx-auto mt-3 max-w-xl text-indigo-100">
-        Upload it and compare it against 148 popular fonts — free, no sign-up, no guesswork.
+        Upload it for an automatic scan against 148 popular fonts — free, no sign-up, no guesswork.
       </p>
       <a
         href="/font-identifier-from-image/"

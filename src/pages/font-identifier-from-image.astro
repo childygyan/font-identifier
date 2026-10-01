@@ -2,33 +2,25 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { FONTS } from "../data/fonts";
 
-// Compact client-side payload: only what the tool needs.
-const compact = FONTS.map((f) => ({
-  n: f.name,
-  s: f.slug,
-  c: f.category,
-  se: f.serif,
-  m: f.moods,
-  p: f.popularity,
-  w: f.weights,
-}));
+// Compact client-side payload: slug -> display name for the scanner.
+const compact = FONTS.map((f) => ({ n: f.name, s: f.slug }));
 const fontJson = JSON.stringify(compact);
-const vibes = ["elegant", "formal", "friendly", "playful", "bold", "modern", "vintage", "editorial"];
 
-const title = "Font Identifier from Image — Free Visual Font Matcher";
+const title = "What the Font? Free Automatic Font Finder From Image";
 const description =
-  "Upload a screenshot and visually match it against popular fonts with this free font identifier from image tool. Everything runs in your browser — nothing is uploaded.";
+  "Upload an image and automatically find what font it uses. Our free what-the-font scanner reads your image in your browser and shows the closest matching fonts with match scores. No sign-up, nothing uploaded.";
 ---
 
 <BaseLayout title={title} description={description} path="/font-identifier-from-image/">
   <div class="mx-auto max-w-6xl px-4 py-10">
     <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-      Font Identifier from Image
+      What the font is that? Find out automatically.
     </h1>
     <p class="mt-4 max-w-3xl text-slate-600">
-      Upload a screenshot or photo of text, then visually compare it side by side with popular
-      fonts rendered in your own words. This is a visual matching aid — not automatic recognition —
-      so you stay in control of the final call. Pick the candidate that looks closest to your image.
+      Upload a screenshot or photo of text and this free font finder scans it on the spot —
+      separating the letters, measuring their shapes against 148 popular fonts, and showing you
+      the closest matches with a match score. Everything runs in your browser; your image is never
+      uploaded anywhere.
     </p>
 
     <!-- ============ STEP 1 : UPLOAD ============ -->
@@ -46,106 +38,136 @@ const description =
       >
         <input id="file-input" type="file" accept="image/*" class="hidden" />
         <p class="text-lg font-semibold text-slate-800">Drag &amp; drop your image here</p>
-        <p class="mt-1 text-sm text-slate-500">or click to choose a file (JPG, PNG, WebP — any size)</p>
-        <p class="mt-2 text-xs text-slate-400">Your image is processed locally and downscaled for display. It never leaves your device.</p>
+        <p class="mt-1 text-sm text-slate-500">or click to choose a file — you can also paste a screenshot with Ctrl+V</p>
+        <p class="mt-2 text-xs text-slate-400">JPG, PNG, WebP or GIF. Scanning starts automatically — your image never leaves your device.</p>
       </div>
     </section>
 
-    <!-- ============ STEP 2 : NARROW DOWN ============ -->
-    <section class="mt-10">
-      <div class="flex items-center gap-3">
-        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">2</span>
-        <h2 class="text-xl font-bold text-slate-900">Narrow down the candidates <span class="text-sm font-normal text-slate-500">(optional)</span></h2>
-      </div>
-      <p class="mt-2 text-sm text-slate-500">
-        Three quick questions about what you see in your image. Leave everything on "Skip" to
-        compare against the 40 most popular fonts.
-      </p>
-      <div class="mt-4 grid gap-4 md:grid-cols-3">
-        <label class="block rounded-xl border border-slate-200 bg-white p-4">
-          <span class="text-sm font-semibold text-slate-800">Serifs?</span>
-          <select id="filter-serif" class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none">
-            <option value="skip">Skip — show everything</option>
-            <option value="none">No serifs — clean stroke ends</option>
-            <option value="slab">Slab serifs — thick blocky feet</option>
-            <option value="serif">Thin / bracketed serifs</option>
-          </select>
-        </label>
-        <label class="block rounded-xl border border-slate-200 bg-white p-4">
-          <span class="text-sm font-semibold text-slate-800">Style?</span>
-          <select id="filter-style" class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none">
-            <option value="skip">Skip — show everything</option>
-            <option value="plain">Plain — normal text look</option>
-            <option value="handwritten">Handwriting / script</option>
-            <option value="code">Code / typewriter</option>
-            <option value="decorative">Decorative / poster</option>
-          </select>
-        </label>
-        <label class="block rounded-xl border border-slate-200 bg-white p-4">
-          <span class="text-sm font-semibold text-slate-800">Vibe?</span>
-          <select id="filter-vibe" class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none">
-            <option value="skip">Skip — show everything</option>
-            {vibes.map((v) => (
-              <option value={v}>{v.charAt(0).toUpperCase() + v.slice(1)}</option>
-            ))}
-          </select>
-        </label>
+    <!-- ============ SCAN PROGRESS ============ -->
+    <section id="scan-panel" class="mt-8 hidden">
+      <div class="rounded-xl border border-indigo-200 bg-white p-6">
+        <div class="flex items-center gap-3">
+          <svg id="scan-spinner" class="h-6 w-6 animate-spin text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <p id="scan-status" class="font-semibold text-slate-800">Starting scan…</p>
+        </div>
+        <div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
+          <div id="scan-bar" class="h-full w-0 rounded-full bg-indigo-600 transition-all duration-300"></div>
+        </div>
       </div>
     </section>
 
-    <!-- ============ STEP 3 : COMPARE ============ -->
-    <section class="mt-10">
-      <div class="flex items-center gap-3">
-        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">3</span>
-        <h2 class="text-xl font-bold text-slate-900">Compare and find your match</h2>
+    <!-- ============ SCAN ERROR ============ -->
+    <section id="error-panel" class="mt-8 hidden">
+      <div class="rounded-xl border border-amber-300 bg-amber-50 p-6">
+        <h3 class="font-bold text-amber-900">Couldn't scan that image</h3>
+        <p id="error-detail" class="mt-2 text-sm text-amber-800"></p>
+        <p class="mt-3 text-sm text-amber-800">
+          Tip: screenshots of websites work best — straight-on, high contrast, one font.
+          Try cropping tighter around just the words, or upload a different image.
+        </p>
+        <button
+          id="error-crop-btn"
+          class="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+        >
+          Crop the image &amp; try again
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ STEP 2 : RESULTS ============ -->
+    <section id="results-section" class="mt-8 hidden">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">2</span>
+          <h2 class="text-xl font-bold text-slate-900">Your closest matches</h2>
+        </div>
+        <p class="text-xs text-slate-500">Ranked by how closely the letter shapes agree with your image.</p>
       </div>
 
-      <div class="mt-4 grid gap-6 lg:grid-cols-[340px_1fr]">
-        <!-- Sticky reference panel -->
+      <div id="low-confidence" class="mt-4 hidden rounded-xl border border-amber-300 bg-amber-50 p-4">
+        <p class="text-sm text-amber-800">
+          <strong>Low confidence on this one.</strong> The lettering was hard to measure — treat
+          these as <em>similar</em> fonts rather than an exact identification, and verify visually below.
+        </p>
+      </div>
+
+      <div class="mt-4 grid gap-6 lg:grid-cols-[320px_1fr]">
+        <!-- Reference + detected text -->
         <div class="lg:self-start">
-          <div class="lg:sticky lg:top-24 rounded-xl border border-slate-200 bg-white p-4">
-            <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Your reference</h3>
-            <div id="reference-placeholder" class="mt-3 flex max-h-80 min-h-48 items-center justify-center rounded-lg bg-slate-100 p-6 text-center">
-              <p class="text-sm text-slate-500">Upload an image in Step 1 and it will stay pinned here while you compare.</p>
-            </div>
-            <div id="reference-panel" class="checkerboard mt-3 hidden items-center justify-center overflow-hidden rounded-lg">
-              <img id="reference-img" alt="Your uploaded text reference" class="max-h-80 w-full object-contain" />
+          <div class="lg:sticky lg:top-24 space-y-4">
+            <div class="rounded-xl border border-slate-200 bg-white p-4">
+              <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-500">What we scanned</h3>
+              <div class="checkerboard mt-3 flex items-center justify-center overflow-hidden rounded-lg">
+                <img id="ref-crop" alt="The cropped lettering we scanned from your image" class="max-h-56 w-full object-contain" />
+              </div>
+              <label class="mt-4 block">
+                <span class="text-sm font-semibold text-slate-800">Text we read <span class="font-normal text-slate-500">(fix it if wrong)</span></span>
+                <input
+                  id="detected-text"
+                  type="text"
+                  class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none"
+                />
+              </label>
+              <button
+                id="recrop-btn"
+                class="mt-3 w-full rounded-lg border border-indigo-300 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-100"
+              >
+                Crop tighter &amp; rescan
+              </button>
+              <p class="mt-2 text-xs text-slate-500">A tight crop around just the words does more for accuracy than anything else.</p>
             </div>
           </div>
         </div>
 
-        <!-- Controls + candidates -->
-        <div>
-          <div class="rounded-xl border border-slate-200 bg-white p-4">
-            <label class="block">
-              <span class="text-sm font-semibold text-slate-800">Type your own text</span>
-              <input
-                id="sample-text"
-                type="text"
-                value="The quick brown fox jumps over the lazy dog"
-                class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none"
-              />
-            </label>
-            <label class="mt-4 block">
-              <span class="text-sm font-semibold text-slate-800">Font size: <span id="size-label">48</span>px</span>
-              <input id="font-size" type="range" min="24" max="96" value="48" class="mt-2 w-full accent-indigo-600" />
-            </label>
-            <p id="result-count" class="mt-3 text-sm text-slate-500"></p>
-          </div>
-
-          <div id="candidates" class="mt-4 grid gap-4 sm:grid-cols-2"></div>
-        </div>
+        <!-- Ranked results -->
+        <div id="results-grid" class="grid content-start gap-4 sm:grid-cols-2"></div>
       </div>
+    </section>
+
+    <!-- crop overlay (sibling of results/error so it works from both) -->
+    <section id="crop-box" class="mt-8 hidden rounded-xl border border-slate-200 bg-white p-4">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Drag a box around the words</h3>
+      <div id="crop-stage" class="relative mt-3 select-none overflow-hidden rounded-lg bg-slate-900" style="touch-action:none">
+        <img id="crop-img" alt="Your uploaded image for cropping" class="block w-full" draggable="false" />
+        <div id="crop-rect" class="absolute hidden border-2 border-indigo-400 bg-indigo-400/20"></div>
+      </div>
+      <div class="mt-3 flex gap-2">
+        <button id="crop-scan" class="flex-1 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700">
+          Scan this area
+        </button>
+        <button id="crop-cancel" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+          Cancel
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="mt-12 rounded-xl bg-slate-50 p-6">
+      <h2 class="text-xl font-bold text-slate-900">How the automatic scan works</h2>
+      <ol class="mt-4 list-decimal space-y-2 pl-5 text-slate-600">
+        <li><strong class="text-slate-800">Your image is read in your browser.</strong> Nothing is uploaded — the whole scan runs on your device.</li>
+        <li><strong class="text-slate-800">The lettering is split into individual letters,</strong> and each letter's shape is measured.</li>
+        <li><strong class="text-slate-800">Shapes are compared against 148 fonts,</strong> letter by letter, to find the closest candidates.</li>
+        <li><strong class="text-slate-800">The top candidates are double-checked</strong> by setting your text in each real font and comparing the whole word.</li>
+      </ol>
+      <p class="mt-4 text-sm text-slate-500">
+        It's a mechanical shape comparison, not magic — when the lettering can't be measured cleanly
+        (joined-up scripts, heavy effects), we say so instead of inventing confidence.
+      </p>
     </section>
 
     <!-- ============ TIPS ============ -->
-    <section class="mt-12 rounded-xl bg-slate-50 p-6">
-      <h2 class="text-xl font-bold text-slate-900">Tips for best results</h2>
+    <section class="mt-8 rounded-xl bg-slate-50 p-6">
+      <h2 class="text-xl font-bold text-slate-900">Tips for the best match</h2>
       <ul class="mt-4 list-disc space-y-2 pl-5 text-slate-600">
-        <li>Use a straight-on, high-contrast screenshot — avoid angled photos with shadows.</li>
-        <li>One line of text works best; crop out logos, backgrounds and other fonts first.</li>
-        <li>Type the exact letters from your image into the sample box for a letter-by-letter comparison.</li>
-        <li>Zoom the size slider up to compare fine details like serifs, the letter "g", or stroke contrast.</li>
+        <li><strong class="text-slate-800">Crop tightly.</strong> Select the words and nothing else — no icons, no background, no second font.</li>
+        <li><strong class="text-slate-800">One size, one weight per scan.</strong> A heading and body text together pull the match in two directions.</li>
+        <li><strong class="text-slate-800">Give it several letters.</strong> A full word or two is much stronger evidence than two or three characters.</li>
+        <li><strong class="text-slate-800">Straight-on and in focus.</strong> Rotate tilted photos upright before uploading.</li>
+        <li><strong class="text-slate-800">Light text on dark is fine</strong> — polarity is detected automatically.</li>
       </ul>
     </section>
 
@@ -154,35 +176,51 @@ const description =
       <h2 class="text-xl font-bold text-slate-900">Frequently asked questions</h2>
       <div class="mt-4 space-y-3">
         <details class="rounded-xl border border-slate-200 bg-white p-4">
-          <summary class="cursor-pointer font-semibold text-slate-800">How accurate is it?</summary>
+          <summary class="cursor-pointer font-semibold text-slate-800">How accurate is the font identification?</summary>
           <p class="mt-2 text-sm text-slate-600">
-            It depends on you visually matching your image against the rendered candidates — the tool
-            narrows the field, you make the final call. It works best with clear, straight-on
-            screenshots of a single font. It only compares against the 148 popular fonts in our
-            library, so rare or commercial fonts may not appear.
+            It depends on the image. Clean, straight-on screenshots of a single print-style font usually
+            put the right font — or a near-identical one — at the top. Decorative lettering, joined-up
+            scripts, heavy effects and tiny text are harder, and the tool tells you when its confidence
+            is low instead of pretending. Always verify with the side-by-side preview before deciding.
+            It compares against the 148 popular fonts in our library, so rare or commercial fonts may
+            only match a close relative.
           </p>
         </details>
         <details class="rounded-xl border border-slate-200 bg-white p-4">
           <summary class="cursor-pointer font-semibold text-slate-800">Does my image get uploaded to a server?</summary>
           <p class="mt-2 text-sm text-slate-600">
-            No. Everything runs in your browser — your image is processed locally on your device and
-            never sent anywhere. Font previews load from Google Fonts' public CDN, which is the only
-            network request the tool makes.
+            No. The entire scan — reading the image, finding the letters, comparing the shapes — runs
+            in your browser on your device. The only network requests are loading this page's font
+            shape database and the Google Fonts previews.
+          </p>
+        </details>
+        <details class="rounded-xl border border-slate-200 bg-white p-4">
+          <summary class="cursor-pointer font-semibold text-slate-800">Is there a "what the font" app I need to install?</summary>
+          <p class="mt-2 text-sm text-slate-600">
+            No app needed — this what-the-font tool works right in your phone or desktop browser.
+            Upload or paste a screenshot and you get your answer in seconds, free, with no account.
           </p>
         </details>
         <details class="rounded-xl border border-slate-200 bg-white p-4">
           <summary class="cursor-pointer font-semibold text-slate-800">What image works best?</summary>
           <p class="mt-2 text-sm text-slate-600">
             A straight-on screenshot with high contrast between text and background, showing a single
-            line of text. Large, sharp lettering is easier to match than small or blurry text, and
-            images with just one font give cleaner comparisons than mixed-type layouts.
+            line of text in one font. Large, sharp lettering is easier to measure than small or blurry
+            text. Lowercase words carry more identifying detail than all-caps.
           </p>
         </details>
         <details class="rounded-xl border border-slate-200 bg-white p-4">
           <summary class="cursor-pointer font-semibold text-slate-800">Is it free?</summary>
           <p class="mt-2 text-sm text-slate-600">
-            Yes — the tool is completely free with no sign-up, and every candidate font is a free
-            Google Font you can use in your own projects.
+            Yes — unlimited scans, completely free, no sign-up. Every matched font is a free Google
+            Font you can download and use in your own projects.
+          </p>
+        </details>
+        <details class="rounded-xl border border-slate-200 bg-white p-4">
+          <summary class="cursor-pointer font-semibold text-slate-800">Is this related to WhatTheFont by MyFonts?</summary>
+          <p class="mt-2 text-sm text-slate-600">
+            No — this is an independent free tool and is not affiliated with, endorsed by, or
+            connected to MyFonts or its WhatTheFont product.
           </p>
         </details>
       </div>
@@ -191,7 +229,7 @@ const description =
     <!-- ============ CTA ============ -->
     <section class="mt-12 grid gap-4 md:grid-cols-2">
       <a href="/identify/" class="rounded-xl border border-indigo-200 bg-indigo-50 p-6 transition hover:border-indigo-400">
-        <h3 class="font-bold text-slate-900">Not sure? Try the Q&amp;A finder</h3>
+        <h3 class="font-bold text-slate-900">No image? Try the Q&amp;A finder</h3>
         <p class="mt-1 text-sm text-slate-600">Answer five questions about the font's look and get ranked matches.</p>
       </a>
       <a href="/browse/" class="rounded-xl border border-slate-200 bg-white p-6 transition hover:border-indigo-400">
@@ -201,167 +239,195 @@ const description =
     </section>
   </div>
 
-  <script id="font-data" type="application/json">{fontJson}</script>
+  <script id="font-data" type="application/json" set:html={fontJson} />
 
   <script>
+    import { loadScanDb, scanImage, rerankWithText } from "../lib/fontscan";
+    import type { ScanDb, RankedFont } from "../lib/fontscan";
+
     (function () {
-      var FONTS = JSON.parse(document.getElementById("font-data").textContent || "[]");
-      var CATEGORY_LABELS = {
-        serif: "Serif",
-        "sans-serif": "Sans-Serif",
-        display: "Display",
-        handwritten: "Handwritten",
-        monospace: "Monospace",
-      };
+      var FONT_LIST = JSON.parse(document.getElementById("font-data")!.textContent || "[]") as { n: string; s: string }[];
+      var NAMES: Record<string, string> = {};
+      FONT_LIST.forEach(function (f) { NAMES[f.s] = f.n; });
 
-      var serifSel = document.getElementById("filter-serif");
-      var styleSel = document.getElementById("filter-style");
-      var vibeSel = document.getElementById("filter-vibe");
-      var sampleInput = document.getElementById("sample-text");
-      var sizeInput = document.getElementById("font-size");
-      var sizeLabel = document.getElementById("size-label");
-      var grid = document.getElementById("candidates");
-      var countLine = document.getElementById("result-count");
+      var dropzone = document.getElementById("dropzone")!;
+      var fileInput = document.getElementById("file-input") as HTMLInputElement;
+      var scanPanel = document.getElementById("scan-panel")!;
+      var scanStatus = document.getElementById("scan-status")!;
+      var scanBar = document.getElementById("scan-bar")!;
+      var errorPanel = document.getElementById("error-panel")!;
+      var errorDetail = document.getElementById("error-detail")!;
+      var resultsSection = document.getElementById("results-section")!;
+      var resultsGrid = document.getElementById("results-grid")!;
+      var refCrop = document.getElementById("ref-crop") as HTMLImageElement;
+      var detectedInput = document.getElementById("detected-text") as HTMLInputElement;
+      var lowConf = document.getElementById("low-confidence")!;
 
-      /* ---------- filtering ---------- */
-      function currentList() {
-        var serif = serifSel.value;
-        var style = styleSel.value;
-        var vibe = vibeSel.value;
-        var list = FONTS.slice();
+      var db: ScanDb | null = null;
+      var dbPromise: Promise<ScanDb> | null = null;
+      var fullImage: HTMLImageElement | null = null;
+      var lastRefUrl: string = "";
+      var lastCandidates: { slug: string; name: string; stage1Rank: number }[] = [];
+      var rerankTimer: number | null = null;
 
-        if (serif === "none") list = list.filter(function (f) { return f.se === "none"; });
-        else if (serif === "slab") list = list.filter(function (f) { return f.se === "slab"; });
-        else if (serif === "serif")
-          list = list.filter(function (f) {
-            return f.se === "bracketed" || f.se === "modern" || f.se === "oldstyle";
+      function getDb(): Promise<ScanDb> {
+        if (db) return Promise.resolve(db);
+        if (!dbPromise) {
+          dbPromise = loadScanDb(NAMES, setProgress).then(function (d) {
+            db = d;
+            return d;
           });
-
-        if (style === "plain") list = list.filter(function (f) { return f.c === "serif" || f.c === "sans-serif"; });
-        else if (style === "handwritten") list = list.filter(function (f) { return f.c === "handwritten"; });
-        else if (style === "code") list = list.filter(function (f) { return f.c === "monospace"; });
-        else if (style === "decorative") list = list.filter(function (f) { return f.c === "display"; });
-
-        if (vibe !== "skip") list = list.filter(function (f) { return f.m.indexOf(vibe) !== -1; });
-
-        list.sort(function (a, b) { return b.p - a.p; });
-        return list.slice(0, 40);
-      }
-
-      /* ---------- webfont loading ---------- */
-      function loadWebfonts(list) {
-        var fams = list.map(function (f) {
-          var wt = f.w.indexOf(400) !== -1 ? 400 : f.w[0];
-          return "family=" + f.n.replace(/ /g, "+") + ":wght@" + wt;
-        });
-        var url = "https://fonts.googleapis.com/css2?" + fams.join("&") + "&display=swap";
-        var link = document.getElementById("candidate-fonts");
-        if (!link) {
-          link = document.createElement("link");
-          link.id = "candidate-fonts";
-          link.rel = "stylesheet";
-          document.head.appendChild(link);
         }
-        link.href = url;
+        return dbPromise;
       }
 
-      /* ---------- rendering ---------- */
-      function render() {
-        var list = currentList();
-        loadWebfonts(list);
+      var STEPS = ["Loading font shape database", "Reading your image", "Separating ink", "Finding individual letters", "Measuring", "Comparing against", "Double-checking", "Re-checking"];
+      function setProgress(msg: string) {
+        scanStatus.textContent = msg;
+        var idx = -1;
+        for (var si = 0; si < STEPS.length; si++) {
+          if (msg.indexOf(STEPS[si] as string) === 0) { idx = si; break; }
+        }
+        var pct = idx >= 0 ? Math.round(((idx + 1) / (STEPS.length + 1)) * 100) : 10;
+        if (msg.indexOf("Double-checking") === 0 && msg.indexOf("(") > 0) pct = 92;
+        scanBar.style.width = pct + "%";
+      }
 
-        var text = sampleInput.value.trim() || "The quick brown fox jumps over the lazy dog";
-        var px = parseInt(sizeInput.value, 10) || 48;
-        sizeLabel.textContent = String(px);
+      function showPanel(el: HTMLElement) { el.classList.remove("hidden"); }
+      function hidePanel(el: HTMLElement) { el.classList.add("hidden"); }
 
-        countLine.textContent =
-          list.length === 0
-            ? "No fonts match those filters — try loosening one of them."
-            : "Showing " + list.length + " candidate font" + (list.length === 1 ? "" : "s") + ". Compare each against your reference image.";
+      function showError(detail: string) {
+        hidePanel(scanPanel);
+        hidePanel(resultsSection);
+        hidePanel(cropBox);
+        errorDetail.textContent = detail;
+        showPanel(errorPanel);
+        errorPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
 
-        grid.innerHTML = "";
-        list.forEach(function (f) {
+      function matchBadge(pct: number): string {
+        var cls = pct >= 80 ? "bg-emerald-100 text-emerald-800" : pct >= 60 ? "bg-indigo-100 text-indigo-800" : "bg-slate-100 text-slate-600";
+        return '<span class="rounded-full px-3 py-1 text-sm font-bold ' + cls + '">' + pct + '% match</span>';
+      }
+
+      function renderResults(results: RankedFont[], refUrl: string, text: string, isLowConf: boolean) {
+        resultsGrid.innerHTML = "";
+        refCrop.src = refUrl;
+        detectedInput.value = text;
+        lowConf.classList.toggle("hidden", !isLowConf);
+        results.forEach(function (r, i) {
           var card = document.createElement("div");
-          card.className = "rounded-xl border border-slate-200 bg-white p-4";
-
-          var head = document.createElement("div");
-          head.className = "flex items-baseline justify-between gap-2";
-
+          card.className = "rounded-xl border border-slate-200 bg-white p-4" + (i === 0 ? " ring-2 ring-indigo-500" : "");
+          var topRow = document.createElement("div");
+          topRow.className = "flex items-center justify-between gap-2";
+          var nameWrap = document.createElement("div");
+          nameWrap.className = "flex items-center gap-2";
+          var rank = document.createElement("span");
+          rank.className = "flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white";
+          rank.textContent = String(i + 1);
           var name = document.createElement("p");
           name.className = "font-bold text-slate-900";
-          name.textContent = f.n;
+          name.textContent = r.name;
+          nameWrap.appendChild(rank);
+          nameWrap.appendChild(name);
+          topRow.appendChild(nameWrap);
+          topRow.innerHTML += matchBadge(r.matchPct);
 
-          var cat = document.createElement("span");
-          cat.className = "shrink-0 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700";
-          cat.textContent = CATEGORY_LABELS[f.c] || f.c;
+          var refLabel = document.createElement("p");
+          refLabel.className = "mt-3 text-xs font-semibold uppercase tracking-wide text-slate-400";
+          refLabel.textContent = "Your image";
+          var refImg = document.createElement("img");
+          refImg.src = refUrl;
+          refImg.alt = "Cropped lettering from your upload";
+          refImg.className = "mt-1 max-h-16 w-full rounded bg-slate-900 object-contain p-1";
 
-          head.appendChild(name);
-          head.appendChild(cat);
-
-          var sample = document.createElement("p");
-          sample.className = "mt-3 break-words leading-snug text-slate-800";
-          sample.style.fontFamily = "'" + f.n + "', sans-serif";
-          sample.style.fontSize = px + "px";
-          sample.textContent = text;
+          var candLabel = document.createElement("p");
+          candLabel.className = "mt-3 text-xs font-semibold uppercase tracking-wide text-slate-400";
+          candLabel.textContent = "Set in " + r.name;
+          var preview = document.createElement("p");
+          preview.className = "mt-1 break-words leading-snug text-slate-800";
+          preview.style.fontFamily = '"' + r.name + '", sans-serif';
+          preview.style.fontSize = "40px";
+          preview.textContent = text;
 
           var link = document.createElement("a");
           link.className = "mt-3 inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-800";
-          link.href = "/fonts/" + f.s + "/";
-          link.textContent = "View details";
+          link.href = "/fonts/" + r.slug + "/";
+          link.textContent = "View " + r.name + " details →";
 
-          card.appendChild(head);
-          card.appendChild(sample);
+          card.appendChild(topRow);
+          card.appendChild(refLabel);
+          card.appendChild(refImg);
+          card.appendChild(candLabel);
+          card.appendChild(preview);
           card.appendChild(link);
-          grid.appendChild(card);
+          resultsGrid.appendChild(card);
         });
+        showPanel(resultsSection);
+        resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
-      serifSel.addEventListener("change", render);
-      styleSel.addEventListener("change", render);
-      vibeSel.addEventListener("change", render);
-      sampleInput.addEventListener("input", render);
-      sizeInput.addEventListener("input", render);
+      async function runScan(img: HTMLImageElement) {
+        hidePanel(errorPanel);
+        hidePanel(resultsSection);
+        showPanel(scanPanel);
+        setProgress("Loading font shape database…");
+        scanBar.style.width = "4%";
+        try {
+          var database = await getDb();
+        } catch (e) {
+          showError("The font shape database couldn't be loaded. Check your connection and try again.");
+          return;
+        }
+        var result = await scanImage(img, database, { onProgress: setProgress });
+        hidePanel(scanPanel);
+        scanBar.style.width = "0%";
+        if (!result.ok) {
+          showError(result.detail);
+          return;
+        }
+        lastRefUrl = result.refCropUrl;
+        lastCandidates = result.results.map(function (r) {
+          return { slug: r.slug, name: r.name, stage1Rank: r.stage1Rank };
+        });
+        renderResults(result.results, result.refCropUrl, result.detectedText, result.lowConfidence);
+      }
 
-      /* ---------- upload ---------- */
-      var dropzone = document.getElementById("dropzone");
-      var fileInput = document.getElementById("file-input");
-      var placeholder = document.getElementById("reference-placeholder");
-      var panel = document.getElementById("reference-panel");
-      var refImg = document.getElementById("reference-img");
+      /* ---------- detected-text correction -> stage-2 only ---------- */
+      detectedInput.addEventListener("input", function () {
+        if (rerankTimer) window.clearTimeout(rerankTimer);
+        rerankTimer = window.setTimeout(async function () {
+          if (!db || !lastRefUrl || lastCandidates.length === 0) return;
+          var text = detectedInput.value.trim();
+          if (!text) return;
+          scanStatus.textContent = "Re-checking with corrected text…";
+          showPanel(scanPanel);
+          var fresh = await rerankWithText(text, lastRefUrl, lastCandidates, db, setProgress);
+          hidePanel(scanPanel);
+          renderResults(fresh, lastRefUrl, text, false);
+        }, 900);
+      });
 
-      function handleFile(file) {
+      /* ---------- upload handling ---------- */
+      function handleFile(file: File | null | undefined) {
         if (!file || file.type.indexOf("image/") !== 0) return;
         var objectUrl = URL.createObjectURL(file);
         var img = new Image();
         img.onload = function () {
-          var max = 1600;
-          var w = img.naturalWidth;
-          var h = img.naturalHeight;
-          if (w > max || h > max) {
-            var r = Math.min(max / w, max / h);
-            w = Math.round(w * r);
-            h = Math.round(h * r);
-          }
-          var canvas = document.createElement("canvas");
-          canvas.width = w;
-          canvas.height = h;
-          var ctx = canvas.getContext("2d");
-          if (ctx) ctx.drawImage(img, 0, 0, w, h);
-          refImg.src = canvas.toDataURL("image/png");
           URL.revokeObjectURL(objectUrl);
-          placeholder.classList.add("hidden");
-          panel.classList.remove("hidden");
-          panel.classList.add("flex");
+          fullImage = img;
+          runScan(img);
+        };
+        img.onerror = function () {
+          URL.revokeObjectURL(objectUrl);
+          showError("That file couldn't be read as an image. Try a JPG or PNG screenshot instead.");
         };
         img.src = objectUrl;
       }
 
       dropzone.addEventListener("click", function () { fileInput.click(); });
       dropzone.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          fileInput.click();
-        }
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); }
       });
       fileInput.addEventListener("change", function () {
         if (fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]);
@@ -383,8 +449,107 @@ const description =
         var dt = e.dataTransfer;
         if (dt && dt.files && dt.files[0]) handleFile(dt.files[0]);
       });
+      document.addEventListener("paste", function (e) {
+        var items = e.clipboardData && e.clipboardData.items;
+        if (!items) return;
+        for (var i = 0; i < items.length; i++) {
+          var it = items[i]!;
+          if (it.type.indexOf("image/") === 0) {
+            var f = it.getAsFile();
+            handleFile(f);
+            e.preventDefault();
+            break;
+          }
+        }
+      });
 
-      render();
+      /* ---------- simple drag crop & rescan ---------- */
+      var recropBtn = document.getElementById("recrop-btn")!;
+      var errorCropBtn = document.getElementById("error-crop-btn")!;
+      var cropBox = document.getElementById("crop-box")!;
+      var cropStage = document.getElementById("crop-stage")!;
+      var cropImg = document.getElementById("crop-img") as HTMLImageElement;
+      var cropRect = document.getElementById("crop-rect")!;
+      var cropScanBtn = document.getElementById("crop-scan")!;
+      var cropCancelBtn = document.getElementById("crop-cancel")!;
+      var dragStart: { x: number; y: number } | null = null;
+
+      function stagePos(e: PointerEvent) {
+        var r = cropStage.getBoundingClientRect();
+        return { x: e.clientX - r.left, y: e.clientY - r.top, w: r.width, h: r.height };
+      }
+
+      var cropReturnTo: "results" | "error" = "results";
+      function openCrop(from: "results" | "error") {
+        if (!fullImage) return;
+        cropReturnTo = from;
+        cropImg.src = fullImage.src;
+        hidePanel(resultsSection);
+        hidePanel(errorPanel);
+        showPanel(cropBox);
+        cropRect.classList.add("hidden");
+        cropBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      recropBtn.addEventListener("click", function () {
+        openCrop("results");
+      });
+      errorCropBtn.addEventListener("click", function () {
+        openCrop("error");
+      });
+      cropCancelBtn.addEventListener("click", function () {
+        hidePanel(cropBox);
+        showPanel(cropReturnTo === "error" ? errorPanel : resultsSection);
+      });
+      cropStage.addEventListener("pointerdown", function (e) {
+        var p = stagePos(e);
+        dragStart = { x: p.x, y: p.y };
+        cropRect.style.left = p.x + "px";
+        cropRect.style.top = p.y + "px";
+        cropRect.style.width = "0px";
+        cropRect.style.height = "0px";
+        cropRect.classList.remove("hidden");
+        cropStage.setPointerCapture(e.pointerId);
+      });
+      cropStage.addEventListener("pointermove", function (e) {
+        if (!dragStart) return;
+        var p = stagePos(e);
+        var x0 = Math.min(dragStart.x, p.x);
+        var y0 = Math.min(dragStart.y, p.y);
+        cropRect.style.left = x0 + "px";
+        cropRect.style.top = y0 + "px";
+        cropRect.style.width = Math.abs(p.x - dragStart.x) + "px";
+        cropRect.style.height = Math.abs(p.y - dragStart.y) + "px";
+      });
+      cropStage.addEventListener("pointerup", function () { dragStart = null; });
+      cropScanBtn.addEventListener("click", function () {
+        if (!fullImage) return;
+        var sr = cropStage.getBoundingClientRect();
+        var rr = cropRect.getBoundingClientRect();
+        var rw = rr.width, rh = rr.height;
+        if (rw < 20 || rh < 12) {
+          scanStatus.textContent = "Drag a box around the words first.";
+          showPanel(scanPanel);
+          window.setTimeout(function () { hidePanel(scanPanel); }, 1500);
+          return;
+        }
+        var sx = fullImage.naturalWidth / sr.width;
+        var sy = fullImage.naturalHeight / sr.height;
+        var cx = (rr.left - sr.left) * sx;
+        var cy = (rr.top - sr.top) * sy;
+        var cw = rw * sx;
+        var ch = rh * sy;
+        var c = document.createElement("canvas");
+        c.width = Math.round(cw);
+        c.height = Math.round(ch);
+        var ctx = c.getContext("2d")!;
+        ctx.drawImage(fullImage, cx, cy, cw, ch, 0, 0, c.width, c.height);
+        var cropped = new Image();
+        cropped.onload = function () {
+          hidePanel(cropBox);
+          runScan(cropped);
+        };
+        cropped.src = c.toDataURL("image/png");
+      });
     })();
   </script>
 
@@ -396,7 +561,7 @@ const description =
         linear-gradient(45deg, #334155 25%, transparent 25%, transparent 75%, #334155 75%);
       background-size: 20px 20px;
       background-position: 0 0, 10px 10px;
-      min-height: 12rem;
+      min-height: 8rem;
     }
   </style>
 </BaseLayout>
